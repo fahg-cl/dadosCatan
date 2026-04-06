@@ -7,852 +7,533 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f4f6f8;
-      color: #1f2937;
-    }
-    .container {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 8px;
-    }
-    h1, h2, h3 {
-      margin: 0 0 6px 0;
-      line-height: 1.2;
-    }
-    h1 { font-size: 20px; }
-    h2 { font-size: 15px; }
-    h3 { font-size: 13px; }
-    .card {
-      background: #fff;
-      border-radius: 10px;
-      padding: 10px;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
-    }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #f4f6f8; color: #1f2937; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 8px; }
+    h1, h2, h3 { margin: 0 0 6px 0; line-height: 1.2; }
+    h1 { font-size: 20px; } h2 { font-size: 15px; } h3 { font-size: 13px; }
+    .card { background: #fff; border-radius: 10px; padding: 10px; box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
     .hidden { display: none; }
-
-    label {
-      display: block;
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    input, select, button {
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-      font-size: 13px;
-    }
-    button {
-      border: none;
-      cursor: pointer;
-      font-weight: 700;
-      color: #fff;
-      background: #2563eb;
-    }
+    label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+    input, select, button { width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 13px; }
+    button { border: none; cursor: pointer; font-weight: 700; color: #fff; background: #2563eb; }
     button:hover { background: #1d4ed8; }
-    .button-success { background: #16a34a; }
-    .button-success:hover { background: #15803d; }
-    .button-secondary { background: #64748b; }
-    .button-secondary:hover { background: #475569; }
-    .button-warning { background: #7c3aed; }
-    .button-warning:hover { background: #6d28d9; }
+    .button-success { background: #16a34a; } .button-success:hover { background: #15803d; }
+    .button-secondary { background: #64748b; } .button-secondary:hover { background: #475569; }
+    .button-warning { background: #7c3aed; } .button-warning:hover { background: #6d28d9; }
+    .small-note { font-size: 11px; color: #64748b; margin-top: 4px; }
 
-    .small-note {
-      font-size: 11px;
-      color: #64748b;
-      margin-top: 4px;
-    }
+    .setup-grid { display: grid; grid-template-columns: 180px 1fr; gap: 8px; align-items: start; }
+    .player-setup-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 8px; margin-top: 6px; }
 
-    .setup-grid {
-      display: grid;
-      grid-template-columns: 180px 1fr;
-      gap: 8px;
-      align-items: start;
-    }
-    .player-setup-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 8px;
-      margin-top: 6px;
-    }
+    /* Stats: siempre 3 columnas */
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px; }
+    .stat-box { background: #eef2ff; border-radius: 10px; padding: 6px 8px; }
+    .stat-box .label { font-size: 10px; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .stat-box .value { font-size: 18px; font-weight: 700; margin-top: 1px; }
 
-    /* STATS: siempre en una sola fila */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-    .stat-box {
-      background: #eef2ff;
-      border-radius: 10px;
-      padding: 6px 8px;
-    }
-    .stat-box .label {
-      font-size: 10px;
-      color: #475569;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .stat-box .value {
-      font-size: 18px;
-      font-weight: 700;
-      margin-top: 1px;
-    }
-
-    .confirm-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-
-    .main-grid {
-      display: grid;
-      grid-template-columns: 1.55fr 1fr;
-      gap: 8px;
-      align-items: start;
-    }
-    .right-stack {
-      display: grid;
-      grid-template-rows: auto;
-      gap: 8px;
-    }
-    .chart-box-sm { height: 150px; }
+    .main-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 8px; align-items: start; }
+    .right-stack { display: grid; gap: 8px; }
     .chart-box-lg { height: 340px; }
     .chart-box-combined { height: 200px; }
 
-    /* Botones de dados: dos filas paralelas (amarillo y rojo) */
-    .dice-section {
-      margin-top: 8px;
-    }
-    .dice-row {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 5px;
-      margin-bottom: 4px;
-    }
-    .dice-btn {
-      background: #f8fafc;
-      color: #1f2937;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      padding: 7px 0;
-      font-size: 14px;
-      font-weight: 700;
-    }
+    /* Botones dados */
+    .dice-section { margin-top: 8px; }
+    .dice-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-bottom: 4px; }
+    .dice-btn { background: #f8fafc; color: #1f2937; border: 1px solid #cbd5e1; border-radius: 8px; padding: 7px 0; font-size: 14px; font-weight: 700; }
     .dice-btn:hover { background: #e2e8f0; }
-    .dice-btn.active-yellow {
-      background: #fef3c7;
-      border-color: #f59e0b;
-      color: #92400e;
-    }
-    .dice-btn.active-red {
-      background: #fee2e2;
-      border-color: #ef4444;
-      color: #991b1b;
-    }
-    .dice-row-label {
-      font-size: 11px;
-      font-weight: 700;
-      margin-bottom: 3px;
-    }
+    .dice-btn.active-yellow { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
+    .dice-btn.active-red { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+    .dice-row-label { font-size: 11px; font-weight: 700; margin-bottom: 3px; }
     .dice-row-label.yellow { color: #92400e; }
     .dice-row-label.red { color: #991b1b; }
 
-    .sum-footer {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 8px;
-    }
-    .preview-box {
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 8px;
-      text-align: center;
-      min-height: 60px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
+    .sum-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .preview-box { border: 1px solid #e2e8f0; border-radius: 10px; padding: 8px; text-align: center; min-height: 60px; display: flex; flex-direction: column; justify-content: center; }
     .preview-box.yellow { background: #fffbeb; }
     .preview-box.red { background: #fef2f2; }
-    .preview-title {
-      font-size: 11px;
-      color: #475569;
-      margin-bottom: 4px;
-    }
-    .preview-value {
-      font-size: 15px;
-      font-weight: 700;
-    }
+    .preview-title { font-size: 11px; color: #475569; margin-bottom: 4px; }
+    .preview-value { font-size: 15px; font-weight: 700; }
 
-    .turn-indicator {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: #1e40af;
-      border-radius: 8px;
-      padding: 8px;
-      font-size: 12px;
-      text-align: center;
-      font-weight: 100;
-    }
-    .player-turn-buttons {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 3px;
-    }
-    .player-turn-btn {
-      min-height: 44px;
+    /* === BARRA DE TURNO MORADA === */
+    .turn-bar {
+      background: linear-gradient(135deg, #581c87 0%, #6b21a8 60%, #7c3aed 100%);
       border-radius: 10px;
-      font-size: 12px;
-      font-weight: 700;
-      border: 2px solid transparent;
-      white-space: normal;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
     }
-    .player-turn-btn.active {
-      outline: 3px solid rgba(37, 99, 235, 0.20);
-      transform: translateY(-1px);
-    }
+    .turn-block { display: flex; flex-direction: column; flex: 1; min-width: 100px; }
+    .turn-label { font-size: 10px; color: #d8b4fe; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px; }
+    .turn-value { font-size: 18px; font-weight: 700; color: #fff; }
+    .turn-divider { width: 1px; height: 40px; background: rgba(255,255,255,0.3); flex-shrink: 0; }
+    .turn-last-label { font-size: 10px; color: #c4b5fd; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px; }
+    .turn-last-value { font-size: 15px; font-weight: 600; color: #e9d5ff; }
 
-    .player-color-red { background: #dc2626; color: #fff; }
-    .player-color-white { background: #f8f4e3; color: #3f3a2f; border: 2px solid #d6cfae; }
-    .player-color-orange { background: #f97316; color: #fff; }
-    .player-color-blue { background: #2563eb; color: #fff; }
-    .player-color-last { background: #9333ea !important; color: #fff !important; border: 2px solid #6b21a8 !important; }
+    /* Botones turno jugadores */
+    .player-turn-buttons { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+    .player-turn-btn { min-height: 40px; border-radius: 10px; font-size: 12px; font-weight: 700; border: 2px solid transparent; white-space: normal; flex: 1 1 80px; width: auto; }
+    .player-turn-btn.active { outline: 3px solid rgba(255,255,255,0.5); transform: translateY(-1px); box-shadow: 0 0 0 2px #7c3aed; }
 
-    .pending-roll-box {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-    }
-    .pending-item {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 8px;
-      text-align: center;
-    }
-    .pending-item .title {
-      font-size: 11px;
-      color: #64748b;
-      margin-bottom: 3px;
-    }
-    .pending-item .value {
-      font-size: 18px;
-      font-weight: 700;
-    }
-    .validation-message {
-      min-height: 18px;
-      font-size: 12px;
-      text-align: center;
-    }
+    /* Colores exactos piezas CATAN */
+    .player-color-red    { background: #C0392B; color: #fff; border-color: #96281B; }
+    .player-color-white  { background: #F5F0E8; color: #3a3530; border: 2px solid #bdb49a; }
+    .player-color-orange { background: #E67E22; color: #fff; border-color: #CA6F1E; }
+    .player-color-blue   { background: #1A6FA8; color: #fff; border-color: #145580; }
+    .player-color-green  { background: #1E8449; color: #fff; border-color: #196F3D; }
+    .player-color-brown  { background: #6E4A2A; color: #fff; border-color: #5A3C22; }
+
+    .confirm-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+    .pending-roll-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .pending-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px; text-align: center; }
+    .pending-item .title { font-size: 11px; color: #64748b; margin-bottom: 3px; }
+    .pending-item .value { font-size: 18px; font-weight: 700; }
+
+    .validation-message { min-height: 18px; font-size: 12px; text-align: center; margin-bottom: 4px; }
     .validation-error { color: #b91c1c; }
     .validation-ok { color: #166534; }
 
-    .bottom-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.42fr 1.15fr;
-      gap: 8px;
-      margin-top: 8px;
-      align-items: stretch;
-    }
-    .actions-panel {
-      display: grid;
-      grid-template-rows: 1fr 1fr;
-      gap: 8px;
-      height: 100%;
-    }
+    .bottom-grid { display: grid; grid-template-columns: 1.15fr 0.42fr 1.15fr; gap: 8px; margin-top: 8px; align-items: stretch; }
+    .actions-panel { display: grid; grid-template-rows: 1fr 1fr; gap: 8px; height: 100%; }
 
-    .filter-row {
-      margin-bottom: 6px;
+    /* Botones de filtro por jugador */
+    .filter-player-buttons { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+    .filter-btn {
+      padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
+      border: 2px solid transparent; cursor: pointer; white-space: nowrap;
+      width: auto; opacity: 0.5; transition: opacity 0.15s, transform 0.1s;
     }
-    .summary-scroll, .history-scroll {
-      max-height: 310px;
-      overflow-y: auto;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-    }
-    th, td {
-      border-bottom: 1px solid #e5e7eb;
-      padding: 6px 8px;
-      text-align: left;
-    }
-    th {
-      background: #f8fafc;
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
+    .filter-btn.active-filter { opacity: 1; transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,0.18); }
+    .filter-btn-all { background: #6b21a8; color: #fff; border-color: #4c1d95; }
 
-    /* Leyenda del gráfico combinado */
-    .combined-legend {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 6px;
-      font-size: 12px;
-    }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .legend-swatch {
-      width: 12px;
-      height: 12px;
-      border-radius: 3px;
-    }
+    .summary-scroll, .history-scroll { max-height: 280px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { border-bottom: 1px solid #e5e7eb; padding: 6px 8px; text-align: left; }
+    th { background: #f8fafc; position: sticky; top: 0; z-index: 1; }
+
+    .combined-legend { display: flex; gap: 16px; margin-bottom: 6px; font-size: 12px; }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .legend-swatch { width: 12px; height: 12px; border-radius: 3px; }
 
     @media (max-width: 900px) {
-      .setup-grid, .main-grid, .bottom-grid {
-        grid-template-columns: 1fr;
-      }
-      .right-stack {
-        grid-template-rows: auto;
-      }
+      .setup-grid, .main-grid, .bottom-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
-      .player-setup-grid,
-      .player-turn-buttons,
-      .pending-roll-box,
-      .sum-footer {
-        grid-template-columns: 1fr;
-      }
+      .player-setup-grid, .pending-roll-box, .sum-footer { grid-template-columns: 1fr; }
+      .turn-divider { display: none; }
+      .confirm-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div id="setupSection" class="card">
-      <h1>Registro de Dados - CATAN</h1>
-      <p class="small-note">Configura hasta 4 jugadores. El orden de ingreso será el orden de lanzamiento.</p>
+<div class="container">
 
-      <div class="setup-grid">
-        <div>
-          <label for="playerCount">Número de jugadores</label>
-          <select id="playerCount">
-            <option value="2">2 jugadores</option>
-            <option value="3">3 jugadores</option>
-            <option value="4" selected>4 jugadores</option>
-          </select>
-          <div style="margin-top:8px;">
-            <button onclick="startGame()">Comenzar</button>
-          </div>
-        </div>
-        <div>
-          <label>Jugadores y color</label>
-          <div id="playerConfigList"></div>
-        </div>
+  <div id="setupSection" class="card">
+    <h1>Registro de Dados - CATAN</h1>
+    <p class="small-note">Configura hasta 4 jugadores. El orden de ingreso será el orden de lanzamiento.</p>
+    <div class="setup-grid">
+      <div>
+        <label for="playerCount">Número de jugadores</label>
+        <select id="playerCount">
+          <option value="2">2 jugadores</option>
+          <option value="3">3 jugadores</option>
+          <option value="4" selected>4 jugadores</option>
+        </select>
+        <div style="margin-top:8px;"><button onclick="startGame()">Comenzar</button></div>
       </div>
-    </div>
-
-    <div id="appSection" class="hidden">
-      <!-- STATS: siempre 3 columnas, una sola fila -->
-      <div class="stats">
-        <div class="stat-box">
-          <div class="label">Total tiros</div>
-          <div id="totalRolls" class="value">0</div>
-        </div>
-        <div class="stat-box">
-          <div class="label">Última suma</div>
-          <div id="lastSum" class="value">-</div>
-        </div>
-        <div class="stat-box">
-          <div class="label">Jugadores</div>
-          <div id="totalPlayers" class="value">0</div>
-        </div>
-      </div>
-
-      <div class="main-grid">
-        <div class="card">
-          <h2>Distribución de la suma</h2>
-          <div class="chart-box-lg">
-            <canvas id="sumChart"></canvas>
-          </div>
-          <div class="sum-footer">
-            <div class="preview-box yellow">
-              <div class="preview-title">Último dado amarillo</div>
-              <div class="preview-value" id="lastYellowText">Sin registros</div>
-            </div>
-            <div class="preview-box red">
-              <div class="preview-title">Último dado rojo</div>
-              <div class="preview-value" id="lastRedText">Sin registros</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="right-stack">
-          <!-- Gráfico combinado amarillo + rojo -->
-          <div class="card">
-            <h2>Frecuencia de dados</h2>
-            <div class="combined-legend">
-              <div class="legend-item">
-                <div class="legend-swatch" style="background:#eab308;"></div>
-                <span>Amarillo</span>
-              </div>
-              <div class="legend-item">
-                <div class="legend-swatch" style="background:#dc2626;"></div>
-                <span>Rojo</span>
-              </div>
-            </div>
-            <div class="chart-box-combined">
-              <canvas id="combinedDiceChart"></canvas>
-            </div>
-            <!-- Botones amarillo y rojo en paralelo debajo del gráfico -->
-            <div class="dice-section">
-              <div class="dice-row-label yellow">Dado amarillo</div>
-              <div id="yellowButtons" class="dice-row"></div>
-              <div class="dice-row-label red" style="margin-top:6px;">Dado rojo</div>
-              <div id="redButtons" class="dice-row"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="stat-box">
-        <div class="card">
-          <h2>Confirmar tiro</h2>
-          <div class="confirm-grid">
-            <div class="turn-indicator" id="turnIndicator">Turno de: -</div>
-            <div class="player-turn-buttons" id="playerTurnButtons"></div>
-            <div class="pending-roll-box">
-              <div class="pending-item">
-                <div class="title">Amarillo</div>
-                <div class="value" id="pendingYellowValue">1</div>
-              </div>
-              <div class="pending-item">
-                <div class="title">Rojo</div>
-                <div class="value" id="pendingRedValue">1</div>
-              </div>
-              <div class="pending-item">
-                <div class="title">Suma</div>
-                <div class="value" id="currentSum">2</div>
-              </div>
-            </div>
-            <div id="validationMessage" class="validation-message validation-ok"></div>
-            <button class="button-success" onclick="registerRoll()">Confirmar tiro</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="bottom-grid">
-        <div class="card">
-          <h2>Resumen por jugador</h2>
-          <div class="filter-row">
-            <select id="summaryFilter" onchange="onFilterChange()">
-              <option value="all">Todos los jugadores</option>
-            </select>
-          </div>
-          <div class="summary-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th>Jugador</th>
-                  <th>Tiros</th>
-                  <th>Prom.</th>
-                </tr>
-              </thead>
-              <tbody id="playerSummary"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="actions-panel">
-          <div class="card">
-            <div class="preview-box" style="background:#9333ea; color:white; border-color:#6b21a8; height:100%;">
-              <div class="preview-title" style="color:white;">Último turno registrado</div>
-              <div class="preview-value" id="lastPlayerTurnText">Sin registros</div>
-            </div>
-          </div>
-          <div class="actions-panel" style="grid-template-rows:1fr 1fr;">
-            <div class="card"><button class="button-warning" onclick="undoLastRoll()">Deshacer última jugada</button></div>
-            <div class="card"><button class="button-secondary" onclick="resetData()">Reiniciar</button></div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>Historial de tiros</h2>
-          <div class="history-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Jugador</th>
-                  <th>A</th>
-                  <th>R</th>
-                  <th>Suma</th>
-                  <th>Hora</th>
-                </tr>
-              </thead>
-              <tbody id="historyTable"></tbody>
-            </table>
-          </div>
-        </div>
+      <div>
+        <label>Jugadores y color</label>
+        <div id="playerConfigList"></div>
       </div>
     </div>
   </div>
 
-  <script>
-    let players = [];
-    let rolls = [];
-    let combinedDiceChart, sumChart;
-    let pendingYellow = 1;
-    let pendingRed = 1;
-    let selectedPlayerIndex = 0;
-    let activeFilter = 'all';
+  <div id="appSection" class="hidden">
 
-    const availableColors = ['red', 'white', 'orange', 'blue'];
-    const colorLabels = {
-      red: 'Rojo',
-      white: 'Blanco Marfil',
-      orange: 'Naranja',
-      blue: 'Azul'
+    <div class="stats">
+      <div class="stat-box"><div class="label">Total tiros</div><div id="totalRolls" class="value">0</div></div>
+      <div class="stat-box"><div class="label">Última suma</div><div id="lastSum" class="value">-</div></div>
+      <div class="stat-box"><div class="label">Jugadores</div><div id="totalPlayers" class="value">0</div></div>
+    </div>
+
+    <div class="main-grid">
+      <div class="card">
+        <h2>Distribución de la suma</h2>
+        <div class="chart-box-lg"><canvas id="sumChart"></canvas></div>
+        <div class="sum-footer">
+          <div class="preview-box yellow">
+            <div class="preview-title">Último dado amarillo</div>
+            <div class="preview-value" id="lastYellowText">Sin registros</div>
+          </div>
+          <div class="preview-box red">
+            <div class="preview-title">Último dado rojo</div>
+            <div class="preview-value" id="lastRedText">Sin registros</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-stack">
+        <div class="card">
+          <h2>Frecuencia de dados</h2>
+          <div class="combined-legend">
+            <div class="legend-item"><div class="legend-swatch" style="background:#eab308;"></div><span>Amarillo</span></div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#dc2626;"></div><span>Rojo</span></div>
+          </div>
+          <div class="chart-box-combined"><canvas id="combinedDiceChart"></canvas></div>
+          <div class="dice-section">
+            <div class="dice-row-label yellow">Dado amarillo</div>
+            <div id="yellowButtons" class="dice-row"></div>
+            <div class="dice-row-label red" style="margin-top:6px;">Dado rojo</div>
+            <div id="redButtons" class="dice-row"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmar tiro -->
+    <div class="card" style="margin-top:8px;">
+      <h2>Confirmar tiro</h2>
+
+      <!-- Barra morada: turno actual + último turno -->
+      <div class="turn-bar">
+        <div class="turn-block">
+          <div class="turn-label">Turno actual</div>
+          <div class="turn-value" id="turnIndicatorName">-</div>
+        </div>
+        <div class="turn-divider"></div>
+        <div class="turn-block">
+          <div class="turn-last-label">Último turno registrado</div>
+          <div class="turn-last-value" id="lastPlayerTurnText">Sin registros</div>
+        </div>
+      </div>
+
+      <div class="player-turn-buttons" id="playerTurnButtons"></div>
+
+      <div class="confirm-row">
+        <div class="pending-roll-box">
+          <div class="pending-item"><div class="title">Amarillo</div><div class="value" id="pendingYellowValue">1</div></div>
+          <div class="pending-item"><div class="title">Rojo</div><div class="value" id="pendingRedValue">1</div></div>
+          <div class="pending-item"><div class="title">Suma</div><div class="value" id="currentSum">2</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;min-width:130px;">
+          <div id="validationMessage" class="validation-message validation-ok"></div>
+          <button class="button-success" onclick="registerRoll()">Confirmar tiro</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-grid">
+      <!-- Resumen jugador con filtro por botones -->
+      <div class="card">
+        <h2>Resumen por jugador</h2>
+        <div class="filter-player-buttons" id="filterPlayerButtons"></div>
+        <div class="summary-scroll">
+          <table>
+            <thead><tr><th>Jugador</th><th>Tiros</th><th>Prom.</th></tr></thead>
+            <tbody id="playerSummary"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="actions-panel">
+        <div class="card"><button class="button-warning" onclick="undoLastRoll()">Deshacer última jugada</button></div>
+        <div class="card"><button class="button-secondary" onclick="resetData()">Reiniciar</button></div>
+      </div>
+
+      <div class="card">
+        <h2>Historial de tiros</h2>
+        <div class="history-scroll">
+          <table>
+            <thead><tr><th>#</th><th>Jugador</th><th>A</th><th>R</th><th>Suma</th><th>Hora</th></tr></thead>
+            <tbody id="historyTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let players = [];
+  let rolls = [];
+  let combinedDiceChart, sumChart;
+  let pendingYellow = 1;
+  let pendingRed = 1;
+  let selectedPlayerIndex = 0;
+  let activeFilter = 'all';
+
+  const availableColors = ['red', 'white', 'orange', 'blue', 'green', 'brown'];
+  const colorLabels = { red:'Rojo', white:'Blanco Marfil', orange:'Naranja', blue:'Azul', green:'Verde', brown:'Marrón' };
+
+  // Colores exactos de piezas Catan
+  const colorHex = {
+    red:    { bg: '#C0392B', border: '#96281B', text: '#fff' },
+    white:  { bg: '#F5F0E8', border: '#bdb49a', text: '#3a3530' },
+    orange: { bg: '#E67E22', border: '#CA6F1E', text: '#fff' },
+    blue:   { bg: '#1A6FA8', border: '#145580', text: '#fff' },
+    green:  { bg: '#1E8449', border: '#196F3D', text: '#fff' },
+    brown:  { bg: '#6E4A2A', border: '#5A3C22', text: '#fff' },
+  };
+
+  function renderPlayerConfigInputs() {
+    const count = parseInt(document.getElementById('playerCount').value, 10);
+    const container = document.getElementById('playerConfigList');
+    container.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+      const row = document.createElement('div');
+      row.className = 'player-setup-grid';
+      row.innerHTML = `
+        <div>
+          <label for="playerName${i}">Nombre jugador ${i + 1}</label>
+          <input id="playerName${i}" type="text" value="Jugador ${i + 1}" maxlength="30" />
+        </div>
+        <div>
+          <label for="playerColor${i}">Color</label>
+          <select id="playerColor${i}">
+            ${availableColors.map(c => `<option value="${c}" ${availableColors[i]===c?'selected':''}>${colorLabels[c]}</option>`).join('')}
+          </select>
+        </div>`;
+      container.appendChild(row);
+    }
+  }
+
+  document.getElementById('playerCount').addEventListener('change', renderPlayerConfigInputs);
+
+  function buildDiceButtons(containerId, type) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    for (let i = 1; i <= 6; i++) {
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'dice-btn'; btn.textContent = i;
+      btn.onclick = () => selectDieValue(type, i);
+      container.appendChild(btn);
+    }
+  }
+
+  function selectDieValue(type, value) {
+    if (type === 'yellow') pendingYellow = value; else pendingRed = value;
+    refreshDiceButtonStates();
+    updateCurrentSum();
+  }
+
+  function refreshDiceButtonStates() {
+    document.querySelectorAll('#yellowButtons .dice-btn').forEach((btn, i) => btn.classList.toggle('active-yellow', i+1===pendingYellow));
+    document.querySelectorAll('#redButtons .dice-btn').forEach((btn, i) => btn.classList.toggle('active-red', i+1===pendingRed));
+    document.getElementById('pendingYellowValue').innerText = pendingYellow;
+    document.getElementById('pendingRedValue').innerText = pendingRed;
+  }
+
+  function buildFilterButtons() {
+    const container = document.getElementById('filterPlayerButtons');
+    container.innerHTML = '';
+
+    const allBtn = document.createElement('button');
+    allBtn.className = 'filter-btn filter-btn-all active-filter';
+    allBtn.dataset.filter = 'all';
+    allBtn.textContent = 'Todos';
+    allBtn.onclick = () => setFilter('all');
+    container.appendChild(allBtn);
+
+    players.forEach(player => {
+      const c = colorHex[player.color] || colorHex.blue;
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.dataset.filter = player.name;
+      btn.style.cssText = `background:${c.bg};color:${c.text};border-color:${c.border};`;
+      btn.textContent = player.name;
+      btn.onclick = () => setFilter(player.name);
+      container.appendChild(btn);
+    });
+  }
+
+  function setFilter(value) {
+    // Toggle: presionar el mismo jugador activo vuelve a "todos"
+    activeFilter = (activeFilter === value && value !== 'all') ? 'all' : value;
+    document.querySelectorAll('#filterPlayerButtons .filter-btn').forEach(btn => {
+      btn.classList.toggle('active-filter', btn.dataset.filter === activeFilter);
+    });
+    renderAll();
+    updateCharts();
+  }
+
+  function getFilteredRolls() {
+    return activeFilter === 'all' ? rolls : rolls.filter(r => r.player === activeFilter);
+  }
+
+  function startGame() {
+    const count = parseInt(document.getElementById('playerCount').value, 10);
+    const chosenColors = [], configuredPlayers = [];
+    for (let i = 0; i < count; i++) {
+      const name = (document.getElementById(`playerName${i}`)?.value || '').trim() || `Jugador ${i+1}`;
+      const color = document.getElementById(`playerColor${i}`)?.value || availableColors[i];
+      if (chosenColors.includes(color)) { alert('No puedes repetir colores.'); return; }
+      chosenColors.push(color);
+      configuredPlayers.push({ name, color, order: i+1 });
+    }
+    players = configuredPlayers; rolls = []; pendingYellow = 1; pendingRed = 1; selectedPlayerIndex = 0; activeFilter = 'all';
+    document.getElementById('setupSection').classList.add('hidden');
+    document.getElementById('appSection').classList.remove('hidden');
+    document.getElementById('totalPlayers').innerText = players.length;
+    buildDiceButtons('yellowButtons','yellow');
+    buildDiceButtons('redButtons','red');
+    buildPlayerTurnButtons();
+    buildFilterButtons();
+    refreshDiceButtonStates();
+    updateCurrentSum();
+    renderAll();
+    initCharts();
+    updateCharts();
+    updateTurnUI();
+    setValidationMessage('', false);
+  }
+
+  function updateCurrentSum() {
+    document.getElementById('currentSum').innerText = pendingYellow + pendingRed;
+  }
+
+  function registerRoll() {
+    const p = players[selectedPlayerIndex];
+    if (!p) return;
+    const yellow = pendingYellow, red = pendingRed, sum = yellow+red;
+    const time = new Date().toLocaleTimeString('es-CL');
+    rolls.push({ player: p.name, playerColor: p.color, playerOrder: p.order, yellow, red, sum, time });
+    selectedPlayerIndex = (selectedPlayerIndex + 1) % players.length;
+    renderAll(); updateCharts(); updateTurnUI();
+    setValidationMessage(`Tiro registrado. Sigue ${players[selectedPlayerIndex].name}.`, false);
+  }
+
+  function undoLastRoll() {
+    if (!rolls.length) { setValidationMessage('No hay jugadas para deshacer.', true); return; }
+    const last = rolls.pop();
+    selectedPlayerIndex = Math.max(0, players.findIndex(p => p.name === last.player));
+    renderAll(); updateCharts(); updateTurnUI();
+    setValidationMessage(`Se deshizo la jugada de ${last.player}.`, false);
+  }
+
+  function resetData() {
+    rolls = []; pendingYellow = 1; pendingRed = 1; selectedPlayerIndex = 0; activeFilter = 'all';
+    buildFilterButtons();
+    refreshDiceButtonStates(); updateCurrentSum(); renderAll(); updateCharts(); updateTurnUI();
+    setValidationMessage('', false);
+  }
+
+  function getFrequency(values, min, max) {
+    const r = [];
+    for (let i = min; i <= max; i++) r.push(values.filter(v => v === i).length);
+    return r;
+  }
+
+  function renderAll() {
+    const f = getFilteredRolls();
+    document.getElementById('totalRolls').innerText = activeFilter === 'all' ? rolls.length : f.length;
+    document.getElementById('lastSum').innerText = f.length ? f[f.length-1].sum : '-';
+    renderHistory(f);
+    renderSummary();
+    updateCompactBoxes(f);
+  }
+
+  function renderHistory(filtered) {
+    const h = document.getElementById('historyTable');
+    h.innerHTML = '';
+    filtered.forEach((roll, i) => {
+      h.innerHTML += `<tr><td>${i+1}</td><td>${roll.player}</td><td>${roll.yellow}</td><td>${roll.red}</td><td>${roll.sum}</td><td>${roll.time}</td></tr>`;
+    });
+  }
+
+  function renderSummary() {
+    const s = document.getElementById('playerSummary');
+    s.innerHTML = '';
+    players.filter(p => activeFilter === 'all' || p.name === activeFilter).forEach(player => {
+      const pr = rolls.filter(r => r.player === player.name);
+      const avg = pr.length ? (pr.reduce((a,r) => a+r.sum, 0)/pr.length).toFixed(2) : '0.00';
+      s.innerHTML += `<tr><td>${player.name}</td><td>${pr.length}</td><td>${avg}</td></tr>`;
+    });
+  }
+
+  function updateCompactBoxes(filtered) {
+    const last = filtered.length ? filtered[filtered.length-1] : null;
+    document.getElementById('lastYellowText').innerText = last ? `Valor ${last.yellow}` : 'Sin registros';
+    document.getElementById('lastRedText').innerText = last ? `Valor ${last.red}` : 'Sin registros';
+    const globalLast = rolls.length ? rolls[rolls.length-1] : null;
+    document.getElementById('lastPlayerTurnText').innerText = globalLast ? globalLast.player : 'Sin registros';
+  }
+
+  function buildPlayerTurnButtons() {
+    const container = document.getElementById('playerTurnButtons');
+    container.innerHTML = '';
+    players.forEach((player, index) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = `player-turn-btn player-color-${player.color}`;
+      btn.innerText = player.name;
+      btn.onclick = () => attemptSelectPlayer(index);
+      container.appendChild(btn);
+    });
+  }
+
+  function attemptSelectPlayer(index) {
+    if (index !== selectedPlayerIndex) {
+      setValidationMessage(`No corresponde. Debe lanzar ${players[selectedPlayerIndex].name}.`, true);
+      return;
+    }
+    updateTurnUI();
+    setValidationMessage(`Jugador correcto: ${players[index].name}.`, false);
+  }
+
+  function updateTurnUI() {
+    const cp = players[selectedPlayerIndex];
+    document.getElementById('turnIndicatorName').innerText = cp ? cp.name : '-';
+    document.querySelectorAll('#playerTurnButtons .player-turn-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', i === selectedPlayerIndex);
+    });
+  }
+
+  function setValidationMessage(message, isError) {
+    const box = document.getElementById('validationMessage');
+    box.innerText = message;
+    box.className = `validation-message ${isError ? 'validation-error' : 'validation-ok'}`;
+  }
+
+  function initCharts() {
+    const base = {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
     };
+    combinedDiceChart = new Chart(document.getElementById('combinedDiceChart'), {
+      type: 'bar',
+      data: {
+        labels: ['1','2','3','4','5','6'],
+        datasets: [
+          { label:'Amarillo', data:[0,0,0,0,0,0], backgroundColor:'#eab308', borderRadius:4 },
+          { label:'Rojo',     data:[0,0,0,0,0,0], backgroundColor:'#dc2626', borderRadius:4 }
+        ]
+      },
+      options: { ...base }
+    });
+    sumChart = new Chart(document.getElementById('sumChart'), {
+      type: 'bar',
+      data: {
+        labels: ['2','3','4','5','6','7','8','9','10','11','12'],
+        datasets: [{ data:[0,0,0,0,0,0,0,0,0,0,0], backgroundColor:'#2563eb' }]
+      },
+      options: base
+    });
+  }
 
-    function renderPlayerConfigInputs() {
-      const count = parseInt(document.getElementById('playerCount').value, 10);
-      const container = document.getElementById('playerConfigList');
-      container.innerHTML = '';
-      for (let i = 0; i < count; i++) {
-        const row = document.createElement('div');
-        row.className = 'player-setup-grid';
-        row.innerHTML = `
-          <div>
-            <label for="playerName${i}">Nombre jugador ${i + 1}</label>
-            <input id="playerName${i}" type="text" value="Jugador ${i + 1}" maxlength="30" />
-          </div>
-          <div>
-            <label for="playerColor${i}">Color</label>
-            <select id="playerColor${i}">
-              ${availableColors.map(color => `<option value="${color}" ${availableColors[i] === color ? 'selected' : ''}>${colorLabels[color]}</option>`).join('')}
-            </select>
-          </div>
-        `;
-        container.appendChild(row);
-      }
-    }
+  function updateCharts() {
+    if (!combinedDiceChart || !sumChart) return;
+    const f = getFilteredRolls();
+    combinedDiceChart.data.datasets[0].data = getFrequency(f.map(r => r.yellow), 1, 6);
+    combinedDiceChart.data.datasets[1].data = getFrequency(f.map(r => r.red), 1, 6);
+    sumChart.data.datasets[0].data = getFrequency(f.map(r => r.sum), 2, 12);
+    combinedDiceChart.update(); sumChart.update();
+  }
 
-    document.getElementById('playerCount').addEventListener('change', renderPlayerConfigInputs);
-
-    function buildDiceButtons(containerId, type) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = '';
-      for (let i = 1; i <= 6; i++) {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'dice-btn';
-        btn.textContent = i;
-        btn.onclick = () => selectDieValue(type, i);
-        container.appendChild(btn);
-      }
-    }
-
-    function selectDieValue(type, value) {
-      if (type === 'yellow') pendingYellow = value;
-      else pendingRed = value;
-      refreshDiceButtonStates();
-      updateCurrentSum();
-    }
-
-    function refreshDiceButtonStates() {
-      document.querySelectorAll('#yellowButtons .dice-btn').forEach((btn, index) => {
-        btn.classList.toggle('active-yellow', index + 1 === pendingYellow);
-      });
-      document.querySelectorAll('#redButtons .dice-btn').forEach((btn, index) => {
-        btn.classList.toggle('active-red', index + 1 === pendingRed);
-      });
-      document.getElementById('pendingYellowValue').innerText = pendingYellow;
-      document.getElementById('pendingRedValue').innerText = pendingRed;
-    }
-
-    function buildSummaryFilter() {
-      const filter = document.getElementById('summaryFilter');
-      filter.innerHTML = '<option value="all">Todos los jugadores</option>';
-      players.forEach((player) => {
-        filter.innerHTML += `<option value="${player.name}">${player.name}</option>`;
-      });
-    }
-
-    function getFilteredRolls() {
-      if (activeFilter === 'all') return rolls;
-      return rolls.filter(r => r.player === activeFilter);
-    }
-
-    function onFilterChange() {
-      activeFilter = document.getElementById('summaryFilter').value;
-      renderAll();
-      updateCharts();
-    }
-
-    function startGame() {
-      const count = parseInt(document.getElementById('playerCount').value, 10);
-      const chosenColors = [];
-      const configuredPlayers = [];
-
-      for (let i = 0; i < count; i++) {
-        const name = (document.getElementById(`playerName${i}`)?.value || '').trim() || `Jugador ${i + 1}`;
-        const color = document.getElementById(`playerColor${i}`)?.value || availableColors[i];
-
-        if (chosenColors.includes(color)) {
-          alert('No puedes repetir colores. Cada jugador debe tener un color distinto.');
-          return;
-        }
-        chosenColors.push(color);
-        configuredPlayers.push({ name, color, order: i + 1 });
-      }
-
-      players = configuredPlayers;
-      rolls = [];
-      pendingYellow = 1;
-      pendingRed = 1;
-      selectedPlayerIndex = 0;
-      activeFilter = 'all';
-
-      document.getElementById('setupSection').classList.add('hidden');
-      document.getElementById('appSection').classList.remove('hidden');
-      document.getElementById('totalPlayers').innerText = players.length;
-
-      buildDiceButtons('yellowButtons', 'yellow');
-      buildDiceButtons('redButtons', 'red');
-      buildPlayerTurnButtons();
-      buildSummaryFilter();
-      refreshDiceButtonStates();
-      updateCurrentSum();
-      renderAll();
-      initCharts();
-      updateCharts();
-      updateTurnUI();
-      setValidationMessage('', false);
-    }
-
-    function updateCurrentSum() {
-      document.getElementById('currentSum').innerText = pendingYellow + pendingRed;
-    }
-
-    function registerRoll() {
-      const currentPlayer = players[selectedPlayerIndex];
-      if (!currentPlayer) return;
-
-      const yellow = pendingYellow;
-      const red = pendingRed;
-      const sum = yellow + red;
-      const time = new Date().toLocaleTimeString('es-CL');
-
-      rolls.push({
-        player: currentPlayer.name,
-        playerColor: currentPlayer.color,
-        playerOrder: currentPlayer.order,
-        yellow, red, sum, time
-      });
-
-      selectedPlayerIndex = (selectedPlayerIndex + 1) % players.length;
-      renderAll();
-      updateCharts();
-      updateTurnUI();
-      setValidationMessage(`Tiro registrado correctamente. Sigue ${players[selectedPlayerIndex].name}.`, false);
-    }
-
-    function undoLastRoll() {
-      if (!rolls.length) {
-        setValidationMessage('No hay jugadas para deshacer.', true);
-        return;
-      }
-      const lastRoll = rolls.pop();
-      const playerIndex = players.findIndex(p => p.name === lastRoll.player);
-      selectedPlayerIndex = playerIndex >= 0 ? playerIndex : 0;
-      renderAll();
-      updateCharts();
-      updateTurnUI();
-      setValidationMessage(`Se deshizo la última jugada de ${lastRoll.player}.`, false);
-    }
-
-    function resetData() {
-      rolls = [];
-      pendingYellow = 1;
-      pendingRed = 1;
-      selectedPlayerIndex = 0;
-      activeFilter = 'all';
-      document.getElementById('summaryFilter').value = 'all';
-      refreshDiceButtonStates();
-      updateCurrentSum();
-      renderAll();
-      updateCharts();
-      updateTurnUI();
-      setValidationMessage('', false);
-    }
-
-    function getFrequency(values, min, max) {
-      const result = [];
-      for (let i = min; i <= max; i++) {
-        result.push(values.filter(v => v === i).length);
-      }
-      return result;
-    }
-
-    function renderAll() {
-      const filtered = getFilteredRolls();
-      // Stats: total tiros muestra filtrado si hay filtro
-      document.getElementById('totalRolls').innerText = activeFilter === 'all' ? rolls.length : filtered.length;
-      document.getElementById('lastSum').innerText = filtered.length ? filtered[filtered.length - 1].sum : '-';
-      renderHistory(filtered);
-      renderSummary();
-      updateCompactBoxes(filtered);
-    }
-
-    function renderHistory(filtered) {
-      const history = document.getElementById('historyTable');
-      history.innerHTML = '';
-      filtered.forEach((roll, index) => {
-        history.innerHTML += `
-          <tr>
-            <td>${index + 1}</td>
-            <td>${roll.player}</td>
-            <td>${roll.yellow}</td>
-            <td>${roll.red}</td>
-            <td>${roll.sum}</td>
-            <td>${roll.time}</td>
-          </tr>
-        `;
-      });
-    }
-
-    function renderSummary() {
-      const summary = document.getElementById('playerSummary');
-      summary.innerHTML = '';
-      players
-        .filter(player => activeFilter === 'all' || player.name === activeFilter)
-        .forEach(player => {
-          const playerRolls = rolls.filter(r => r.player === player.name);
-          const avg = playerRolls.length
-            ? (playerRolls.reduce((acc, r) => acc + r.sum, 0) / playerRolls.length).toFixed(2)
-            : '0.00';
-          summary.innerHTML += `
-            <tr>
-              <td>${player.name}</td>
-              <td>${playerRolls.length}</td>
-              <td>${avg}</td>
-            </tr>
-          `;
-        });
-    }
-
-    function updateCompactBoxes(filtered) {
-      const lastRoll = filtered.length ? filtered[filtered.length - 1] : null;
-      document.getElementById('lastYellowText').innerText = lastRoll ? `Valor ${lastRoll.yellow}` : 'Sin registros';
-      document.getElementById('lastRedText').innerText = lastRoll ? `Valor ${lastRoll.red}` : 'Sin registros';
-      // El último turno siempre del historial global
-      const globalLast = rolls.length ? rolls[rolls.length - 1] : null;
-      document.getElementById('lastPlayerTurnText').innerText = globalLast ? globalLast.player : 'Sin registros';
-    }
-
-    function buildPlayerTurnButtons() {
-      const container = document.getElementById('playerTurnButtons');
-      container.innerHTML = '';
-      players.forEach((player, index) => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = `player-turn-btn player-color-${player.color}`;
-        btn.innerText = player.name;
-        btn.onclick = () => attemptSelectPlayer(index);
-        container.appendChild(btn);
-      });
-    }
-
-    function attemptSelectPlayer(index) {
-      if (index !== selectedPlayerIndex) {
-        const expected = players[selectedPlayerIndex];
-        setValidationMessage(`No corresponde ese turno. Debe lanzar ${expected.name}.`, true);
-        return;
-      }
-      selectedPlayerIndex = index;
-      updateTurnUI();
-      setValidationMessage(`Jugador correcto: ${players[index].name}.`, false);
-    }
-
-    function updateTurnUI() {
-      const currentPlayer = players[selectedPlayerIndex];
-      const lastPlayerName = rolls.length ? rolls[rolls.length - 1].player : null;
-      document.getElementById('turnIndicator').innerText = currentPlayer ? `Turno de: ${currentPlayer.name}` : 'Turno de: -';
-      document.querySelectorAll('#playerTurnButtons .player-turn-btn').forEach((btn, index) => {
-        const player = players[index];
-        btn.classList.toggle('active', index === selectedPlayerIndex);
-        btn.classList.toggle('player-color-last', !!lastPlayerName && player.name === lastPlayerName);
-      });
-    }
-
-    function setValidationMessage(message, isError) {
-      const box = document.getElementById('validationMessage');
-      box.innerText = message;
-      box.className = `validation-message ${isError ? 'validation-error' : 'validation-ok'}`;
-    }
-
-    function initCharts() {
-      const baseOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          y: { beginAtZero: true, ticks: { precision: 0 } }
-        }
-      };
-
-      // Gráfico combinado: dos datasets (amarillo y rojo), etiquetas 1-6
-      combinedDiceChart = new Chart(document.getElementById('combinedDiceChart'), {
-        type: 'bar',
-        data: {
-          labels: ['1', '2', '3', '4', '5', '6'],
-          datasets: [
-            {
-              label: 'Amarillo',
-              data: [0,0,0,0,0,0],
-              backgroundColor: '#eab308',
-              borderRadius: 4
-            },
-            {
-              label: 'Rojo',
-              data: [0,0,0,0,0,0],
-              backgroundColor: '#dc2626',
-              borderRadius: 4
-            }
-          ]
-        },
-        options: {
-          ...baseOptions,
-          plugins: { legend: { display: false } }
-        }
-      });
-
-      sumChart = new Chart(document.getElementById('sumChart'), {
-        type: 'bar',
-        data: {
-          labels: ['2','3','4','5','6','7','8','9','10','11','12'],
-          datasets: [{ data: [0,0,0,0,0,0,0,0,0,0,0], backgroundColor: '#2563eb' }]
-        },
-        options: baseOptions
-      });
-    }
-
-    function updateCharts() {
-      if (!combinedDiceChart || !sumChart) return;
-      const filtered = getFilteredRolls();
-      combinedDiceChart.data.datasets[0].data = getFrequency(filtered.map(r => r.yellow), 1, 6);
-      combinedDiceChart.data.datasets[1].data = getFrequency(filtered.map(r => r.red), 1, 6);
-      sumChart.data.datasets[0].data = getFrequency(filtered.map(r => r.sum), 2, 12);
-      combinedDiceChart.update();
-      sumChart.update();
-    }
-
-    renderPlayerConfigInputs();
-  </script>
+  renderPlayerConfigInputs();
+</script>
 </body>
 </html>
