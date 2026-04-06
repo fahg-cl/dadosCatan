@@ -25,7 +25,6 @@
     .setup-grid { display: grid; grid-template-columns: 180px 1fr; gap: 8px; align-items: start; }
     .player-setup-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 8px; margin-top: 6px; }
 
-    /* Stats: siempre 3 columnas */
     .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px; }
     .stat-box { background: #eef2ff; border-radius: 10px; padding: 6px 8px; }
     .stat-box .label { font-size: 10px; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -36,7 +35,6 @@
     .chart-box-lg { height: 340px; }
     .chart-box-combined { height: 200px; }
 
-    /* Botones dados */
     .dice-section { margin-top: 8px; }
     .dice-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-bottom: 4px; }
     .dice-btn { background: #f8fafc; color: #1f2937; border: 1px solid #cbd5e1; border-radius: 8px; padding: 7px 0; font-size: 14px; font-weight: 700; }
@@ -47,21 +45,82 @@
     .dice-row-label.yellow { color: #92400e; }
     .dice-row-label.red { color: #991b1b; }
 
-    .sum-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-    .preview-box { border: 1px solid #e2e8f0; border-radius: 10px; padding: 8px; text-align: center; min-height: 60px; display: flex; flex-direction: column; justify-content: center; }
-    .preview-box.yellow { background: #fffbeb; }
-    .preview-box.red { background: #fef2f2; }
+    .sum-footer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .die-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 100px;
+    }
+    .die-card.yellow { background: #fffbeb; }
+    .die-card.red { background: #fef2f2; }
+
+    .die-card-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 90px;
+    }
     .preview-title { font-size: 11px; color: #475569; margin-bottom: 4px; }
     .preview-value { font-size: 15px; font-weight: 700; }
 
-.btn-confirm {
-  height: 60px;
-  font-size: 16px;
-  border-radius: 10px;
-  letter-spacing: 0.5px;
-}
+    .die-face {
+      position: relative;
+      width: 68px;
+      height: 68px;
+      min-width: 68px;
+      border-radius: 14px;
+      background: #fff;
+      border: 2px solid #d1d5db;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .die-face.yellow { border-color: #f59e0b; }
+    .die-face.red { border-color: #ef4444; }
 
-    /* === BARRA DE TURNO MORADA === */
+    .pip {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #111827;
+      opacity: 0;
+    }
+
+    .pip.tl { top: 10px; left: 10px; }
+    .pip.tc { top: 10px; left: 50%; transform: translateX(-50%); }
+    .pip.tr { top: 10px; right: 10px; }
+    .pip.ml { top: 50%; left: 10px; transform: translateY(-50%); }
+    .pip.mc { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .pip.mr { top: 50%; right: 10px; transform: translateY(-50%); }
+    .pip.bl { bottom: 10px; left: 10px; }
+    .pip.bc { bottom: 10px; left: 50%; transform: translateX(-50%); }
+    .pip.br { bottom: 10px; right: 10px; }
+
+    .die-face.die-1 .mc,
+    .die-face.die-2 .tl, .die-face.die-2 .br,
+    .die-face.die-3 .tl, .die-face.die-3 .mc, .die-face.die-3 .br,
+    .die-face.die-4 .tl, .die-face.die-4 .tr, .die-face.die-4 .bl, .die-face.die-4 .br,
+    .die-face.die-5 .tl, .die-face.die-5 .tr, .die-face.die-5 .mc, .die-face.die-5 .bl, .die-face.die-5 .br,
+    .die-face.die-6 .tl, .die-face.die-6 .tr, .die-face.die-6 .ml, .die-face.die-6 .mr, .die-face.die-6 .bl, .die-face.die-6 .br {
+      opacity: 1;
+    }
+
+    .btn-confirm {
+      height: 60px;
+      font-size: 16px;
+      border-radius: 10px;
+      letter-spacing: 0.5px;
+    }
+
     .turn-bar {
       background: linear-gradient(135deg, #581c87 0%, #6b21a8 60%, #7c3aed 100%);
       border-radius: 10px;
@@ -79,12 +138,10 @@
     .turn-last-label { font-size: 10px; color: #c4b5fd; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px; }
     .turn-last-value { font-size: 15px; font-weight: 600; color: #e9d5ff; }
 
-    /* Botones turno jugadores */
     .player-turn-buttons { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
     .player-turn-btn { min-height: 40px; border-radius: 10px; font-size: 12px; font-weight: 700; border: 2px solid transparent; white-space: normal; flex: 1 1 80px; width: auto; }
     .player-turn-btn.active { outline: 3px solid rgba(255,255,255,0.5); transform: translateY(-1px); box-shadow: 0 0 0 2px #7c3aed; }
 
-    /* Colores exactos piezas CATAN */
     .player-color-red    { background: #C0392B; color: #fff; border-color: #96281B; }
     .player-color-white  { background: #F5F0E8; color: #3a3530; border: 2px solid #bdb49a; }
     .player-color-orange { background: #E67E22; color: #fff; border-color: #CA6F1E; }
@@ -105,7 +162,6 @@
     .bottom-grid { display: grid; grid-template-columns: 1.15fr 0.42fr 1.15fr; gap: 8px; margin-top: 8px; align-items: stretch; }
     .actions-panel { display: grid; grid-template-rows: 1fr 1fr; gap: 8px; height: 100%; }
 
-    /* Botones de filtro por jugador */
     .filter-player-buttons { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
     .filter-btn {
       padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
@@ -127,19 +183,19 @@
     @media (max-width: 900px) {
       .setup-grid, .main-grid, .bottom-grid { grid-template-columns: 1fr; }
     }
-@media (max-width: 600px) {
-  .player-setup-grid,
-  .sum-footer {
-    grid-template-columns: 1fr;
-  }
+    @media (max-width: 600px) {
+      .player-setup-grid,
+      .sum-footer {
+        grid-template-columns: 1fr;
+      }
 
-  .pending-roll-box {
-    grid-template-columns: repeat(3, 1fr);
-  }
+      .pending-roll-box {
+        grid-template-columns: repeat(3, 1fr);
+      }
 
-  .turn-divider { display: none; }
-  .confirm-row { grid-template-columns: 1fr; }
-}
+      .turn-divider { display: none; }
+      .confirm-row { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -177,14 +233,42 @@
       <div class="card">
         <h2>Distribución de la suma</h2>
         <div class="chart-box-lg"><canvas id="sumChart"></canvas></div>
+
         <div class="sum-footer">
-          <div class="preview-box yellow">
-            <div class="preview-title">Último dado amarillo</div>
-            <div class="preview-value" id="lastYellowText">Sin registros</div>
+          <div class="die-card yellow">
+            <div class="die-face yellow die-1" id="lastYellowDie">
+              <span class="pip tl"></span>
+              <span class="pip tc"></span>
+              <span class="pip tr"></span>
+              <span class="pip ml"></span>
+              <span class="pip mc"></span>
+              <span class="pip mr"></span>
+              <span class="pip bl"></span>
+              <span class="pip bc"></span>
+              <span class="pip br"></span>
+            </div>
+            <div class="die-card-info">
+              <div class="preview-title">Último dado amarillo</div>
+              <div class="preview-value" id="lastYellowText">Sin registros</div>
+            </div>
           </div>
-          <div class="preview-box red">
-            <div class="preview-title">Último dado rojo</div>
-            <div class="preview-value" id="lastRedText">Sin registros</div>
+
+          <div class="die-card red">
+            <div class="die-face red die-1" id="lastRedDie">
+              <span class="pip tl"></span>
+              <span class="pip tc"></span>
+              <span class="pip tr"></span>
+              <span class="pip ml"></span>
+              <span class="pip mc"></span>
+              <span class="pip mr"></span>
+              <span class="pip bl"></span>
+              <span class="pip bc"></span>
+              <span class="pip br"></span>
+            </div>
+            <div class="die-card-info">
+              <div class="preview-title">Último dado rojo</div>
+              <div class="preview-value" id="lastRedText">Sin registros</div>
+            </div>
           </div>
         </div>
       </div>
@@ -207,11 +291,9 @@
       </div>
     </div>
 
-    <!-- Confirmar tiro -->
     <div class="card" style="margin-top:8px;">
       <h2>Confirmar tiro</h2>
 
-      <!-- Barra morada: turno actual + último turno -->
       <div class="turn-bar">
         <div class="turn-block">
           <div class="turn-label">Turno actual</div>
@@ -240,7 +322,6 @@
     </div>
 
     <div class="bottom-grid">
-      <!-- Resumen jugador con filtro por botones -->
       <div class="card">
         <h2>Resumen por jugador</h2>
         <div class="filter-player-buttons" id="filterPlayerButtons"></div>
@@ -283,7 +364,6 @@
   const availableColors = ['red', 'white', 'orange', 'blue', 'green', 'brown'];
   const colorLabels = { red:'Rojo', white:'Blanco Marfil', orange:'Naranja', blue:'Azul', green:'Verde', brown:'Marrón' };
 
-  // Colores exactos de piezas Catan
   const colorHex = {
     red:    { bg: '#C0392B', border: '#96281B', text: '#fff' },
     white:  { bg: '#F5F0E8', border: '#bdb49a', text: '#3a3530' },
@@ -322,7 +402,9 @@
     container.innerHTML = '';
     for (let i = 1; i <= 6; i++) {
       const btn = document.createElement('button');
-      btn.type = 'button'; btn.className = 'dice-btn'; btn.textContent = i;
+      btn.type = 'button';
+      btn.className = 'dice-btn';
+      btn.textContent = i;
       btn.onclick = () => selectDieValue(type, i);
       container.appendChild(btn);
     }
@@ -365,7 +447,6 @@
   }
 
   function setFilter(value) {
-    // Toggle: presionar el mismo jugador activo vuelve a "todos"
     activeFilter = (activeFilter === value && value !== 'all') ? 'all' : value;
     document.querySelectorAll('#filterPlayerButtons .filter-btn').forEach(btn => {
       btn.classList.toggle('active-filter', btn.dataset.filter === activeFilter);
@@ -416,7 +497,9 @@
     const time = new Date().toLocaleTimeString('es-CL');
     rolls.push({ player: p.name, playerColor: p.color, playerOrder: p.order, yellow, red, sum, time });
     selectedPlayerIndex = (selectedPlayerIndex + 1) % players.length;
-    renderAll(); updateCharts(); updateTurnUI();
+    renderAll();
+    updateCharts();
+    updateTurnUI();
     setValidationMessage(`Tiro registrado. Sigue ${players[selectedPlayerIndex].name}.`, false);
   }
 
@@ -424,14 +507,20 @@
     if (!rolls.length) { setValidationMessage('No hay jugadas para deshacer.', true); return; }
     const last = rolls.pop();
     selectedPlayerIndex = Math.max(0, players.findIndex(p => p.name === last.player));
-    renderAll(); updateCharts(); updateTurnUI();
+    renderAll();
+    updateCharts();
+    updateTurnUI();
     setValidationMessage(`Se deshizo la jugada de ${last.player}.`, false);
   }
 
   function resetData() {
     rolls = []; pendingYellow = 1; pendingRed = 1; selectedPlayerIndex = 0; activeFilter = 'all';
     buildFilterButtons();
-    refreshDiceButtonStates(); updateCurrentSum(); renderAll(); updateCharts(); updateTurnUI();
+    refreshDiceButtonStates();
+    updateCurrentSum();
+    renderAll();
+    updateCharts();
+    updateTurnUI();
     setValidationMessage('', false);
   }
 
@@ -468,11 +557,33 @@
     });
   }
 
+  function setDieFace(elementId, value) {
+    const die = document.getElementById(elementId);
+    if (!die) return;
+    die.classList.remove('die-1', 'die-2', 'die-3', 'die-4', 'die-5', 'die-6');
+    if (value >= 1 && value <= 6) {
+      die.classList.add(`die-${value}`);
+    } else {
+      die.classList.add('die-1');
+    }
+  }
+
   function updateCompactBoxes(filtered) {
     const last = filtered.length ? filtered[filtered.length-1] : null;
-    document.getElementById('lastYellowText').innerText = last ? `Valor ${last.yellow}` : 'Sin registros';
-    document.getElementById('lastRedText').innerText = last ? `Valor ${last.red}` : 'Sin registros';
     const globalLast = rolls.length ? rolls[rolls.length-1] : null;
+
+    if (last) {
+      document.getElementById('lastYellowText').innerText = `Valor ${last.yellow}`;
+      document.getElementById('lastRedText').innerText = `Valor ${last.red}`;
+      setDieFace('lastYellowDie', last.yellow);
+      setDieFace('lastRedDie', last.red);
+    } else {
+      document.getElementById('lastYellowText').innerText = 'Sin registros';
+      document.getElementById('lastRedText').innerText = 'Sin registros';
+      setDieFace('lastYellowDie', 1);
+      setDieFace('lastRedDie', 1);
+    }
+
     document.getElementById('lastPlayerTurnText').innerText = globalLast ? globalLast.player : 'Sin registros';
   }
 
@@ -545,7 +656,8 @@
     combinedDiceChart.data.datasets[0].data = getFrequency(f.map(r => r.yellow), 1, 6);
     combinedDiceChart.data.datasets[1].data = getFrequency(f.map(r => r.red), 1, 6);
     sumChart.data.datasets[0].data = getFrequency(f.map(r => r.sum), 2, 12);
-    combinedDiceChart.update(); sumChart.update();
+    combinedDiceChart.update();
+    sumChart.update();
   }
 
   renderPlayerConfigInputs();
