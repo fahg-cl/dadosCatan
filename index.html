@@ -10,38 +10,147 @@
     body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #f4f6f8; color: #1f2937; }
     .container { max-width: 1280px; margin: 0 auto; padding: 8px; }
     h1, h2, h3 { margin: 0 0 6px 0; line-height: 1.2; }
-    h1 { font-size: 20px; } h2 { font-size: 15px; } h3 { font-size: 13px; }
-    .card { background: #fff; border-radius: 10px; padding: 10px; box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
+    h1 { font-size: 20px; }
+    h2 { font-size: 15px; }
+    h3 { font-size: 13px; }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+    }
+
     .hidden { display: none; }
-    label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 4px; }
-    input, select, button { width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 13px; }
-    button { border: none; cursor: pointer; font-weight: 700; color: #fff; background: #2563eb; }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 13px;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      color: #fff;
+      background: #2563eb;
+    }
+
     button:hover { background: #1d4ed8; }
-    .button-success { background: #16a34a; } .button-success:hover { background: #15803d; }
-    .button-secondary { background: #64748b; } .button-secondary:hover { background: #475569; }
-    .button-warning { background: #7c3aed; } .button-warning:hover { background: #6d28d9; }
-    .small-note { font-size: 11px; color: #64748b; margin-top: 4px; }
+    .button-success { background: #16a34a; }
+    .button-success:hover { background: #15803d; }
+    .button-secondary { background: #64748b; }
+    .button-secondary:hover { background: #475569; }
+    .button-warning { background: #7c3aed; }
+    .button-warning:hover { background: #6d28d9; }
 
-    .setup-grid { display: grid; grid-template-columns: 180px 1fr; gap: 8px; align-items: start; }
-    .player-setup-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 8px; margin-top: 6px; }
+    .small-note {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 4px;
+    }
 
-    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px; }
-    .stat-box { background: #eef2ff; border-radius: 10px; padding: 6px 8px; }
-    .stat-box .label { font-size: 10px; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .stat-box .value { font-size: 18px; font-weight: 700; margin-top: 1px; }
+    .setup-grid {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 8px;
+      align-items: start;
+    }
 
-    .main-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 8px; align-items: start; }
+    .player-setup-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .stat-box {
+      background: #eef2ff;
+      border-radius: 10px;
+      padding: 6px 8px;
+    }
+
+    .stat-box .label {
+      font-size: 10px;
+      color: #475569;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .stat-box .value {
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 1px;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 8px;
+      align-items: start;
+    }
+
     .right-stack { display: grid; gap: 8px; }
     .chart-box-lg { height: 340px; }
     .chart-box-combined { height: 200px; }
 
     .dice-section { margin-top: 8px; }
-    .dice-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-bottom: 4px; }
-    .dice-btn { background: #f8fafc; color: #1f2937; border: 1px solid #cbd5e1; border-radius: 8px; padding: 7px 0; font-size: 14px; font-weight: 700; }
+
+    .dice-row {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 5px;
+      margin-bottom: 4px;
+    }
+
+    .dice-btn {
+      background: #f8fafc;
+      color: #1f2937;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 7px 0;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
     .dice-btn:hover { background: #e2e8f0; }
-    .dice-btn.active-yellow { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
-    .dice-btn.active-red { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
-    .dice-row-label { font-size: 11px; font-weight: 700; margin-bottom: 3px; }
+
+    .dice-btn.active-yellow {
+      background: #fef3c7;
+      border-color: #f59e0b;
+      color: #92400e;
+    }
+
+    .dice-btn.active-red {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: #991b1b;
+    }
+
+    .dice-row-label {
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
     .dice-row-label.yellow { color: #92400e; }
     .dice-row-label.red { color: #991b1b; }
 
@@ -61,6 +170,7 @@
       gap: 10px;
       min-height: 100px;
     }
+
     .die-card.yellow { background: #fffbeb; }
     .die-card.red { background: #fef2f2; }
 
@@ -70,47 +180,108 @@
       justify-content: center;
       min-width: 90px;
     }
-    .preview-title { font-size: 11px; color: #475569; margin-bottom: 4px; }
-    .preview-value { font-size: 15px; font-weight: 700; }
+
+    .preview-title {
+      font-size: 11px;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+
+    .preview-value {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .die-face,
+    .pending-die {
+      position: relative;
+      background: #fff;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 4px rgba(0,0,0,0.08);
+    }
 
     .die-face {
-      position: relative;
       width: 68px;
       height: 68px;
       min-width: 68px;
       border-radius: 14px;
-      background: #fff;
       border: 2px solid #d1d5db;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 4px rgba(0,0,0,0.08);
     }
+
     .die-face.yellow { border-color: #f59e0b; }
     .die-face.red { border-color: #ef4444; }
 
+    .pending-die-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 22px;
+    }
+
+    .pending-die {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 2px solid #d1d5db;
+      flex-shrink: 0;
+    }
+
+    .pending-die.yellow { border-color: #f59e0b; }
+    .pending-die.red { border-color: #ef4444; }
+
     .pip {
       position: absolute;
-      width: 10px;
-      height: 10px;
       border-radius: 50%;
       background: #111827;
       opacity: 0;
     }
 
-    .pip.tl { top: 10px; left: 10px; }
-    .pip.tc { top: 10px; left: 50%; transform: translateX(-50%); }
-    .pip.tr { top: 10px; right: 10px; }
-    .pip.ml { top: 50%; left: 10px; transform: translateY(-50%); }
-    .pip.mc { top: 50%; left: 50%; transform: translate(-50%, -50%); }
-    .pip.mr { top: 50%; right: 10px; transform: translateY(-50%); }
-    .pip.bl { bottom: 10px; left: 10px; }
-    .pip.bc { bottom: 10px; left: 50%; transform: translateX(-50%); }
-    .pip.br { bottom: 10px; right: 10px; }
+    .die-face .pip {
+      width: 10px;
+      height: 10px;
+    }
 
+    .pending-die .pip {
+      width: 5px;
+      height: 5px;
+    }
+
+    .die-face .pip.tl { top: 10px; left: 10px; }
+    .die-face .pip.tc { top: 10px; left: 50%; transform: translateX(-50%); }
+    .die-face .pip.tr { top: 10px; right: 10px; }
+    .die-face .pip.ml { top: 50%; left: 10px; transform: translateY(-50%); }
+    .die-face .pip.mc { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .die-face .pip.mr { top: 50%; right: 10px; transform: translateY(-50%); }
+    .die-face .pip.bl { bottom: 10px; left: 10px; }
+    .die-face .pip.bc { bottom: 10px; left: 50%; transform: translateX(-50%); }
+    .die-face .pip.br { bottom: 10px; right: 10px; }
+
+    .pending-die .pip.tl { top: 4px; left: 4px; }
+    .pending-die .pip.tc { top: 4px; left: 50%; transform: translateX(-50%); }
+    .pending-die .pip.tr { top: 4px; right: 4px; }
+    .pending-die .pip.ml { top: 50%; left: 4px; transform: translateY(-50%); }
+    .pending-die .pip.mc { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .pending-die .pip.mr { top: 50%; right: 4px; transform: translateY(-50%); }
+    .pending-die .pip.bl { bottom: 4px; left: 4px; }
+    .pending-die .pip.bc { bottom: 4px; left: 50%; transform: translateX(-50%); }
+    .pending-die .pip.br { bottom: 4px; right: 4px; }
+
+    /* Dados grandes */
     .die-face.die-1 .mc,
     .die-face.die-2 .tl, .die-face.die-2 .br,
     .die-face.die-3 .tl, .die-face.die-3 .mc, .die-face.die-3 .br,
     .die-face.die-4 .tl, .die-face.die-4 .tr, .die-face.die-4 .bl, .die-face.die-4 .br,
     .die-face.die-5 .tl, .die-face.die-5 .tr, .die-face.die-5 .mc, .die-face.die-5 .bl, .die-face.die-5 .br,
     .die-face.die-6 .tl, .die-face.die-6 .tr, .die-face.die-6 .ml, .die-face.die-6 .mr, .die-face.die-6 .bl, .die-face.die-6 .br {
+      opacity: 1;
+    }
+
+    /* Dados pequeños */
+    .pending-die.die-1 .mc,
+    .pending-die.die-2 .tl, .pending-die.die-2 .br,
+    .pending-die.die-3 .tl, .pending-die.die-3 .mc, .pending-die.die-3 .br,
+    .pending-die.die-4 .tl, .pending-die.die-4 .tr, .pending-die.die-4 .bl, .pending-die.die-4 .br,
+    .pending-die.die-5 .tl, .pending-die.die-5 .tr, .pending-die.die-5 .mc, .pending-die.die-5 .bl, .pending-die.die-5 .br,
+    .pending-die.die-6 .tl, .pending-die.die-6 .tr, .pending-die.die-6 .ml, .pending-die.die-6 .mr, .pending-die.die-6 .bl, .pending-die.die-6 .br {
       opacity: 1;
     }
 
@@ -131,16 +302,68 @@
       margin-bottom: 10px;
       flex-wrap: wrap;
     }
-    .turn-block { display: flex; flex-direction: column; flex: 1; min-width: 100px; }
-    .turn-label { font-size: 10px; color: #d8b4fe; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px; }
-    .turn-value { font-size: 18px; font-weight: 700; color: #fff; }
-    .turn-divider { width: 1px; height: 40px; background: rgba(255,255,255,0.3); flex-shrink: 0; }
-    .turn-last-label { font-size: 10px; color: #c4b5fd; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px; }
-    .turn-last-value { font-size: 15px; font-weight: 600; color: #e9d5ff; }
 
-    .player-turn-buttons { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
-    .player-turn-btn { min-height: 40px; border-radius: 10px; font-size: 12px; font-weight: 700; border: 2px solid transparent; white-space: normal; flex: 1 1 80px; width: auto; }
-    .player-turn-btn.active { outline: 3px solid rgba(255,255,255,0.5); transform: translateY(-1px); box-shadow: 0 0 0 2px #7c3aed; }
+    .turn-block {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 100px;
+    }
+
+    .turn-label,
+    .turn-last-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 3px;
+    }
+
+    .turn-label { color: #d8b4fe; }
+    .turn-last-label { color: #c4b5fd; }
+
+    .turn-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .turn-last-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: #e9d5ff;
+    }
+
+    .turn-divider {
+      width: 1px;
+      height: 40px;
+      background: rgba(255,255,255,0.3);
+      flex-shrink: 0;
+    }
+
+    .player-turn-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .player-turn-btn {
+      min-height: 40px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 2px solid transparent;
+      white-space: normal;
+      flex: 1 1 80px;
+      width: auto;
+    }
+
+    .player-turn-btn.active {
+      outline: 3px solid rgba(255,255,255,0.5);
+      transform: translateY(-1px);
+      box-shadow: 0 0 0 2px #7c3aed;
+    }
 
     .player-color-red    { background: #C0392B; color: #fff; border-color: #96281B; }
     .player-color-white  { background: #F5F0E8; color: #3a3530; border: 2px solid #bdb49a; }
@@ -149,44 +372,157 @@
     .player-color-green  { background: #1E8449; color: #fff; border-color: #196F3D; }
     .player-color-brown  { background: #6E4A2A; color: #fff; border-color: #5A3C22; }
 
-    .confirm-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
-    .pending-roll-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-    .pending-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px; text-align: center; }
-    .pending-item .title { font-size: 11px; color: #64748b; margin-bottom: 3px; }
-    .pending-item .value { font-size: 18px; font-weight: 700; }
+    .confirm-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
 
-    .validation-message { min-height: 18px; font-size: 12px; text-align: center; margin-bottom: 4px; }
+    .pending-roll-box {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .pending-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .pending-item .title {
+      font-size: 11px;
+      color: #64748b;
+      margin-bottom: 3px;
+    }
+
+    .pending-item .value {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .validation-message {
+      min-height: 18px;
+      font-size: 12px;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
     .validation-error { color: #b91c1c; }
     .validation-ok { color: #166534; }
 
-    .bottom-grid { display: grid; grid-template-columns: 1.15fr 0.42fr 1.15fr; gap: 8px; margin-top: 8px; align-items: stretch; }
-    .actions-panel { display: grid; grid-template-rows: 1fr 1fr; gap: 8px; height: 100%; }
-
-    .filter-player-buttons { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
-    .filter-btn {
-      padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
-      border: 2px solid transparent; cursor: pointer; white-space: nowrap;
-      width: auto; opacity: 0.5; transition: opacity 0.15s, transform 0.1s;
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.42fr 1.15fr;
+      gap: 8px;
+      margin-top: 8px;
+      align-items: stretch;
     }
-    .filter-btn.active-filter { opacity: 1; transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,0.18); }
-    .filter-btn-all { background: #6b21a8; color: #fff; border-color: #4c1d95; }
 
-    .summary-scroll, .history-scroll { max-height: 280px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 8px; }
-    table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    th, td { border-bottom: 1px solid #e5e7eb; padding: 6px 8px; text-align: left; }
-    th { background: #f8fafc; position: sticky; top: 0; z-index: 1; }
+    .actions-panel {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 8px;
+      height: 100%;
+    }
 
-    .combined-legend { display: flex; gap: 16px; margin-bottom: 6px; font-size: 12px; }
-    .legend-item { display: flex; align-items: center; gap: 5px; }
-    .legend-swatch { width: 12px; height: 12px; border-radius: 3px; }
+    .filter-player-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 8px;
+    }
+
+    .filter-btn {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 2px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      width: auto;
+      opacity: 0.5;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    .filter-btn.active-filter {
+      opacity: 1;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+    }
+
+    .filter-btn-all {
+      background: #6b21a8;
+      color: #fff;
+      border-color: #4c1d95;
+    }
+
+    .summary-scroll,
+    .history-scroll {
+      max-height: 280px;
+      overflow-y: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th, td {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 6px 8px;
+      text-align: left;
+    }
+
+    th {
+      background: #f8fafc;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .combined-legend {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
 
     @media (max-width: 900px) {
-      .setup-grid, .main-grid, .bottom-grid { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 600px) {
-      .player-setup-grid,
-      .sum-footer {
+      .setup-grid,
+      .main-grid,
+      .bottom-grid {
         grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .player-setup-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* Mantener los dos dados en una sola línea */
+      .sum-footer {
+        grid-template-columns: 1fr 1fr;
       }
 
       .pending-roll-box {
@@ -195,6 +531,46 @@
 
       .turn-divider { display: none; }
       .confirm-row { grid-template-columns: 1fr; }
+
+      .die-card {
+        min-height: 86px;
+        padding: 8px;
+        gap: 8px;
+      }
+
+      .die-face {
+        width: 54px;
+        height: 54px;
+        min-width: 54px;
+        border-radius: 12px;
+      }
+
+      .die-face .pip {
+        width: 8px;
+        height: 8px;
+      }
+
+      .die-face .pip.tl { top: 8px; left: 8px; }
+      .die-face .pip.tc { top: 8px; left: 50%; transform: translateX(-50%); }
+      .die-face .pip.tr { top: 8px; right: 8px; }
+      .die-face .pip.ml { top: 50%; left: 8px; transform: translateY(-50%); }
+      .die-face .pip.mc { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+      .die-face .pip.mr { top: 50%; right: 8px; transform: translateY(-50%); }
+      .die-face .pip.bl { bottom: 8px; left: 8px; }
+      .die-face .pip.bc { bottom: 8px; left: 50%; transform: translateX(-50%); }
+      .die-face .pip.br { bottom: 8px; right: 8px; }
+
+      .die-card-info {
+        min-width: 0;
+      }
+
+      .preview-title {
+        font-size: 10px;
+      }
+
+      .preview-value {
+        font-size: 13px;
+      }
     }
   </style>
 </head>
@@ -237,15 +613,9 @@
         <div class="sum-footer">
           <div class="die-card yellow">
             <div class="die-face yellow die-1" id="lastYellowDie">
-              <span class="pip tl"></span>
-              <span class="pip tc"></span>
-              <span class="pip tr"></span>
-              <span class="pip ml"></span>
-              <span class="pip mc"></span>
-              <span class="pip mr"></span>
-              <span class="pip bl"></span>
-              <span class="pip bc"></span>
-              <span class="pip br"></span>
+              <span class="pip tl"></span><span class="pip tc"></span><span class="pip tr"></span>
+              <span class="pip ml"></span><span class="pip mc"></span><span class="pip mr"></span>
+              <span class="pip bl"></span><span class="pip bc"></span><span class="pip br"></span>
             </div>
             <div class="die-card-info">
               <div class="preview-title">Último dado amarillo</div>
@@ -255,15 +625,9 @@
 
           <div class="die-card red">
             <div class="die-face red die-1" id="lastRedDie">
-              <span class="pip tl"></span>
-              <span class="pip tc"></span>
-              <span class="pip tr"></span>
-              <span class="pip ml"></span>
-              <span class="pip mc"></span>
-              <span class="pip mr"></span>
-              <span class="pip bl"></span>
-              <span class="pip bc"></span>
-              <span class="pip br"></span>
+              <span class="pip tl"></span><span class="pip tc"></span><span class="pip tr"></span>
+              <span class="pip ml"></span><span class="pip mc"></span><span class="pip mr"></span>
+              <span class="pip bl"></span><span class="pip bc"></span><span class="pip br"></span>
             </div>
             <div class="die-card-info">
               <div class="preview-title">Último dado rojo</div>
@@ -310,10 +674,34 @@
 
       <div class="confirm-row">
         <div class="pending-roll-box">
-          <div class="pending-item"><div class="title">Amarillo</div><div class="value" id="pendingYellowValue">1</div></div>
-          <div class="pending-item"><div class="title">Rojo</div><div class="value" id="pendingRedValue">1</div></div>
-          <div class="pending-item"><div class="title">Suma</div><div class="value" id="currentSum">2</div></div>
+          <div class="pending-item">
+            <div class="title">Amarillo</div>
+            <div class="pending-die-wrap">
+              <div class="pending-die yellow die-1" id="pendingYellowDie">
+                <span class="pip tl"></span><span class="pip tc"></span><span class="pip tr"></span>
+                <span class="pip ml"></span><span class="pip mc"></span><span class="pip mr"></span>
+                <span class="pip bl"></span><span class="pip bc"></span><span class="pip br"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pending-item">
+            <div class="title">Rojo</div>
+            <div class="pending-die-wrap">
+              <div class="pending-die red die-1" id="pendingRedDie">
+                <span class="pip tl"></span><span class="pip tc"></span><span class="pip tr"></span>
+                <span class="pip ml"></span><span class="pip mc"></span><span class="pip mr"></span>
+                <span class="pip bl"></span><span class="pip bc"></span><span class="pip br"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pending-item">
+            <div class="title">Suma</div>
+            <div class="value" id="currentSum">2</div>
+          </div>
         </div>
+
         <div style="display:flex;flex-direction:column;gap:5px;min-width:130px;">
           <div id="validationMessage" class="validation-message validation-ok"></div>
           <button class="button-success btn-confirm" onclick="registerRoll()">Confirmar tiro</button>
@@ -362,7 +750,14 @@
   let activeFilter = 'all';
 
   const availableColors = ['red', 'white', 'orange', 'blue', 'green', 'brown'];
-  const colorLabels = { red:'Rojo', white:'Blanco Marfil', orange:'Naranja', blue:'Azul', green:'Verde', brown:'Marrón' };
+  const colorLabels = {
+    red:'Rojo',
+    white:'Blanco Marfil',
+    orange:'Naranja',
+    blue:'Azul',
+    green:'Verde',
+    brown:'Marrón'
+  };
 
   const colorHex = {
     red:    { bg: '#C0392B', border: '#96281B', text: '#fff' },
@@ -377,6 +772,7 @@
     const count = parseInt(document.getElementById('playerCount').value, 10);
     const container = document.getElementById('playerConfigList');
     container.innerHTML = '';
+
     for (let i = 0; i < count; i++) {
       const row = document.createElement('div');
       row.className = 'player-setup-grid';
@@ -400,6 +796,7 @@
   function buildDiceButtons(containerId, type) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
+
     for (let i = 1; i <= 6; i++) {
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -410,17 +807,35 @@
     }
   }
 
+  function setDieFace(elementId, value) {
+    const die = document.getElementById(elementId);
+    if (!die) return;
+
+    die.classList.remove('die-1', 'die-2', 'die-3', 'die-4', 'die-5', 'die-6');
+
+    if (value >= 1 && value <= 6) die.classList.add(`die-${value}`);
+    else die.classList.add('die-1');
+  }
+
   function selectDieValue(type, value) {
-    if (type === 'yellow') pendingYellow = value; else pendingRed = value;
+    if (type === 'yellow') pendingYellow = value;
+    else pendingRed = value;
+
     refreshDiceButtonStates();
     updateCurrentSum();
   }
 
   function refreshDiceButtonStates() {
-    document.querySelectorAll('#yellowButtons .dice-btn').forEach((btn, i) => btn.classList.toggle('active-yellow', i+1===pendingYellow));
-    document.querySelectorAll('#redButtons .dice-btn').forEach((btn, i) => btn.classList.toggle('active-red', i+1===pendingRed));
-    document.getElementById('pendingYellowValue').innerText = pendingYellow;
-    document.getElementById('pendingRedValue').innerText = pendingRed;
+    document.querySelectorAll('#yellowButtons .dice-btn').forEach((btn, i) => {
+      btn.classList.toggle('active-yellow', i + 1 === pendingYellow);
+    });
+
+    document.querySelectorAll('#redButtons .dice-btn').forEach((btn, i) => {
+      btn.classList.toggle('active-red', i + 1 === pendingRed);
+    });
+
+    setDieFace('pendingYellowDie', pendingYellow);
+    setDieFace('pendingRedDie', pendingRed);
   }
 
   function buildFilterButtons() {
@@ -448,9 +863,11 @@
 
   function setFilter(value) {
     activeFilter = (activeFilter === value && value !== 'all') ? 'all' : value;
+
     document.querySelectorAll('#filterPlayerButtons .filter-btn').forEach(btn => {
       btn.classList.toggle('active-filter', btn.dataset.filter === activeFilter);
     });
+
     renderAll();
     updateCharts();
   }
@@ -461,20 +878,35 @@
 
   function startGame() {
     const count = parseInt(document.getElementById('playerCount').value, 10);
-    const chosenColors = [], configuredPlayers = [];
+    const chosenColors = [];
+    const configuredPlayers = [];
+
     for (let i = 0; i < count; i++) {
-      const name = (document.getElementById(`playerName${i}`)?.value || '').trim() || `Jugador ${i+1}`;
+      const name = (document.getElementById(`playerName${i}`)?.value || '').trim() || `Jugador ${i + 1}`;
       const color = document.getElementById(`playerColor${i}`)?.value || availableColors[i];
-      if (chosenColors.includes(color)) { alert('No puedes repetir colores.'); return; }
+
+      if (chosenColors.includes(color)) {
+        alert('No puedes repetir colores.');
+        return;
+      }
+
       chosenColors.push(color);
-      configuredPlayers.push({ name, color, order: i+1 });
+      configuredPlayers.push({ name, color, order: i + 1 });
     }
-    players = configuredPlayers; rolls = []; pendingYellow = 1; pendingRed = 1; selectedPlayerIndex = 0; activeFilter = 'all';
+
+    players = configuredPlayers;
+    rolls = [];
+    pendingYellow = 1;
+    pendingRed = 1;
+    selectedPlayerIndex = 0;
+    activeFilter = 'all';
+
     document.getElementById('setupSection').classList.add('hidden');
     document.getElementById('appSection').classList.remove('hidden');
     document.getElementById('totalPlayers').innerText = players.length;
-    buildDiceButtons('yellowButtons','yellow');
-    buildDiceButtons('redButtons','red');
+
+    buildDiceButtons('yellowButtons', 'yellow');
+    buildDiceButtons('redButtons', 'red');
     buildPlayerTurnButtons();
     buildFilterButtons();
     refreshDiceButtonStates();
@@ -493,10 +925,24 @@
   function registerRoll() {
     const p = players[selectedPlayerIndex];
     if (!p) return;
-    const yellow = pendingYellow, red = pendingRed, sum = yellow+red;
+
+    const yellow = pendingYellow;
+    const red = pendingRed;
+    const sum = yellow + red;
     const time = new Date().toLocaleTimeString('es-CL');
-    rolls.push({ player: p.name, playerColor: p.color, playerOrder: p.order, yellow, red, sum, time });
+
+    rolls.push({
+      player: p.name,
+      playerColor: p.color,
+      playerOrder: p.order,
+      yellow,
+      red,
+      sum,
+      time
+    });
+
     selectedPlayerIndex = (selectedPlayerIndex + 1) % players.length;
+
     renderAll();
     updateCharts();
     updateTurnUI();
@@ -504,9 +950,14 @@
   }
 
   function undoLastRoll() {
-    if (!rolls.length) { setValidationMessage('No hay jugadas para deshacer.', true); return; }
+    if (!rolls.length) {
+      setValidationMessage('No hay jugadas para deshacer.', true);
+      return;
+    }
+
     const last = rolls.pop();
     selectedPlayerIndex = Math.max(0, players.findIndex(p => p.name === last.player));
+
     renderAll();
     updateCharts();
     updateTurnUI();
@@ -514,7 +965,12 @@
   }
 
   function resetData() {
-    rolls = []; pendingYellow = 1; pendingRed = 1; selectedPlayerIndex = 0; activeFilter = 'all';
+    rolls = [];
+    pendingYellow = 1;
+    pendingRed = 1;
+    selectedPlayerIndex = 0;
+    activeFilter = 'all';
+
     buildFilterButtons();
     refreshDiceButtonStates();
     updateCurrentSum();
@@ -532,8 +988,10 @@
 
   function renderAll() {
     const f = getFilteredRolls();
+
     document.getElementById('totalRolls').innerText = activeFilter === 'all' ? rolls.length : f.length;
-    document.getElementById('lastSum').innerText = f.length ? f[f.length-1].sum : '-';
+    document.getElementById('lastSum').innerText = f.length ? f[f.length - 1].sum : '-';
+
     renderHistory(f);
     renderSummary();
     updateCompactBoxes(f);
@@ -542,35 +1000,28 @@
   function renderHistory(filtered) {
     const h = document.getElementById('historyTable');
     h.innerHTML = '';
+
     filtered.forEach((roll, i) => {
-      h.innerHTML += `<tr><td>${i+1}</td><td>${roll.player}</td><td>${roll.yellow}</td><td>${roll.red}</td><td>${roll.sum}</td><td>${roll.time}</td></tr>`;
+      h.innerHTML += `<tr><td>${i + 1}</td><td>${roll.player}</td><td>${roll.yellow}</td><td>${roll.red}</td><td>${roll.sum}</td><td>${roll.time}</td></tr>`;
     });
   }
 
   function renderSummary() {
     const s = document.getElementById('playerSummary');
     s.innerHTML = '';
-    players.filter(p => activeFilter === 'all' || p.name === activeFilter).forEach(player => {
-      const pr = rolls.filter(r => r.player === player.name);
-      const avg = pr.length ? (pr.reduce((a,r) => a+r.sum, 0)/pr.length).toFixed(2) : '0.00';
-      s.innerHTML += `<tr><td>${player.name}</td><td>${pr.length}</td><td>${avg}</td></tr>`;
-    });
-  }
 
-  function setDieFace(elementId, value) {
-    const die = document.getElementById(elementId);
-    if (!die) return;
-    die.classList.remove('die-1', 'die-2', 'die-3', 'die-4', 'die-5', 'die-6');
-    if (value >= 1 && value <= 6) {
-      die.classList.add(`die-${value}`);
-    } else {
-      die.classList.add('die-1');
-    }
+    players
+      .filter(p => activeFilter === 'all' || p.name === activeFilter)
+      .forEach(player => {
+        const pr = rolls.filter(r => r.player === player.name);
+        const avg = pr.length ? (pr.reduce((a, r) => a + r.sum, 0) / pr.length).toFixed(2) : '0.00';
+        s.innerHTML += `<tr><td>${player.name}</td><td>${pr.length}</td><td>${avg}</td></tr>`;
+      });
   }
 
   function updateCompactBoxes(filtered) {
-    const last = filtered.length ? filtered[filtered.length-1] : null;
-    const globalLast = rolls.length ? rolls[rolls.length-1] : null;
+    const last = filtered.length ? filtered[filtered.length - 1] : null;
+    const globalLast = rolls.length ? rolls[rolls.length - 1] : null;
 
     if (last) {
       document.getElementById('lastYellowText').innerText = `Valor ${last.yellow}`;
@@ -590,6 +1041,7 @@
   function buildPlayerTurnButtons() {
     const container = document.getElementById('playerTurnButtons');
     container.innerHTML = '';
+
     players.forEach((player, index) => {
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -605,6 +1057,7 @@
       setValidationMessage(`No corresponde. Debe lanzar ${players[selectedPlayerIndex].name}.`, true);
       return;
     }
+
     updateTurnUI();
     setValidationMessage(`Jugador correcto: ${players[index].name}.`, false);
   }
@@ -612,6 +1065,7 @@
   function updateTurnUI() {
     const cp = players[selectedPlayerIndex];
     document.getElementById('turnIndicatorName').innerText = cp ? cp.name : '-';
+
     document.querySelectorAll('#playerTurnButtons .player-turn-btn').forEach((btn, i) => {
       btn.classList.toggle('active', i === selectedPlayerIndex);
     });
@@ -625,21 +1079,24 @@
 
   function initCharts() {
     const base = {
-      responsive: true, maintainAspectRatio: false,
+      responsive: true,
+      maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
     };
+
     combinedDiceChart = new Chart(document.getElementById('combinedDiceChart'), {
       type: 'bar',
       data: {
         labels: ['1','2','3','4','5','6'],
         datasets: [
           { label:'Amarillo', data:[0,0,0,0,0,0], backgroundColor:'#eab308', borderRadius:4 },
-          { label:'Rojo',     data:[0,0,0,0,0,0], backgroundColor:'#dc2626', borderRadius:4 }
+          { label:'Rojo', data:[0,0,0,0,0,0], backgroundColor:'#dc2626', borderRadius:4 }
         ]
       },
       options: { ...base }
     });
+
     sumChart = new Chart(document.getElementById('sumChart'), {
       type: 'bar',
       data: {
@@ -652,10 +1109,13 @@
 
   function updateCharts() {
     if (!combinedDiceChart || !sumChart) return;
+
     const f = getFilteredRolls();
+
     combinedDiceChart.data.datasets[0].data = getFrequency(f.map(r => r.yellow), 1, 6);
     combinedDiceChart.data.datasets[1].data = getFrequency(f.map(r => r.red), 1, 6);
     sumChart.data.datasets[0].data = getFrequency(f.map(r => r.sum), 2, 12);
+
     combinedDiceChart.update();
     sumChart.update();
   }
