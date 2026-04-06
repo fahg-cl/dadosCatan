@@ -80,25 +80,29 @@
       margin-top: 6px;
     }
 
+    /* STATS: siempre en una sola fila */
     .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      gap: 6px;
       margin-bottom: 8px;
     }
     .stat-box {
       background: #eef2ff;
       border-radius: 10px;
-      padding: 10px 12px;
+      padding: 6px 8px;
     }
     .stat-box .label {
-      font-size: 11px;
+      font-size: 10px;
       color: #475569;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .stat-box .value {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     .confirm-grid {
@@ -115,17 +119,22 @@
     }
     .right-stack {
       display: grid;
-      grid-template-rows: auto auto auto;
+      grid-template-rows: auto;
       gap: 8px;
     }
     .chart-box-sm { height: 150px; }
     .chart-box-lg { height: 340px; }
+    .chart-box-combined { height: 200px; }
 
-    .dice-buttons {
+    /* Botones de dados: dos filas paralelas (amarillo y rojo) */
+    .dice-section {
+      margin-top: 8px;
+    }
+    .dice-row {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
       gap: 5px;
-      margin-top: 8px;
+      margin-bottom: 4px;
     }
     .dice-btn {
       background: #f8fafc;
@@ -147,6 +156,13 @@
       border-color: #ef4444;
       color: #991b1b;
     }
+    .dice-row-label {
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+    .dice-row-label.yellow { color: #92400e; }
+    .dice-row-label.red { color: #991b1b; }
 
     .sum-footer {
       display: grid;
@@ -175,7 +191,6 @@
       font-size: 15px;
       font-weight: 700;
     }
-
 
     .turn-indicator {
       background: #eff6ff;
@@ -280,11 +295,26 @@
       z-index: 1;
     }
 
+    /* Leyenda del gráfico combinado */
+    .combined-legend {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+
     @media (max-width: 900px) {
       .setup-grid, .main-grid, .bottom-grid {
-        grid-template-columns: 1fr;
-      }
-      .stats {
         grid-template-columns: 1fr;
       }
       .right-stack {
@@ -297,9 +327,6 @@
       .pending-roll-box,
       .sum-footer {
         grid-template-columns: 1fr;
-      }
-      .dice-buttons {
-        grid-template-columns: repeat(3, 1fr);
       }
     }
   </style>
@@ -330,9 +357,10 @@
     </div>
 
     <div id="appSection" class="hidden">
+      <!-- STATS: siempre 3 columnas, una sola fila -->
       <div class="stats">
         <div class="stat-box">
-          <div class="label">Total de tiros</div>
+          <div class="label">Total tiros</div>
           <div id="totalRolls" class="value">0</div>
         </div>
         <div class="stat-box">
@@ -364,56 +392,64 @@
         </div>
 
         <div class="right-stack">
+          <!-- Gráfico combinado amarillo + rojo -->
           <div class="card">
-            <h2>Frecuencia dado amarillo</h2>
-            <div class="chart-box-sm">
-              <canvas id="yellowChart"></canvas>
+            <h2>Frecuencia de dados</h2>
+            <div class="combined-legend">
+              <div class="legend-item">
+                <div class="legend-swatch" style="background:#eab308;"></div>
+                <span>Amarillo</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-swatch" style="background:#dc2626;"></div>
+                <span>Rojo</span>
+              </div>
             </div>
-            <div id="yellowButtons" class="dice-buttons"></div>
-          </div>
-
-          <div class="card">
-            <h2>Frecuencia dado rojo</h2>
-            <div class="chart-box-sm">
-              <canvas id="redChart"></canvas>
+            <div class="chart-box-combined">
+              <canvas id="combinedDiceChart"></canvas>
             </div>
-            <div id="redButtons" class="dice-buttons"></div>
+            <!-- Botones amarillo y rojo en paralelo debajo del gráfico -->
+            <div class="dice-section">
+              <div class="dice-row-label yellow">Dado amarillo</div>
+              <div id="yellowButtons" class="dice-row"></div>
+              <div class="dice-row-label red" style="margin-top:6px;">Dado rojo</div>
+              <div id="redButtons" class="dice-row"></div>
+            </div>
           </div>
-
-
         </div>
       </div>
+
       <div class="stat-box">
-          <div class="card">
-            <h2>Confirmar tiro</h2>
-            <div class="confirm-grid">
-              <div class="turn-indicator" id="turnIndicator">Turno de: -</div>
-              <div class="player-turn-buttons" id="playerTurnButtons"></div>
-              <div class="pending-roll-box" class="hidden">
-                <div class="pending-item"class="hidden">
-                  <div class="title">Amarillo</div>
-                  <div class="value" id="pendingYellowValue">1</div>
-                </div>
-                <div class="pending-item"class="hidden">
-                  <div class="title">Rojo</div>
-                  <div class="value" id="pendingRedValue">1</div>
-                </div>
-                <div class="pending-item"class="hidden">
-                  <div class="title">Suma</div>
-                  <div class="value" id="currentSum">2</div>
-                </div>
+        <div class="card">
+          <h2>Confirmar tiro</h2>
+          <div class="confirm-grid">
+            <div class="turn-indicator" id="turnIndicator">Turno de: -</div>
+            <div class="player-turn-buttons" id="playerTurnButtons"></div>
+            <div class="pending-roll-box">
+              <div class="pending-item">
+                <div class="title">Amarillo</div>
+                <div class="value" id="pendingYellowValue">1</div>
               </div>
-              <div id="validationMessage" class="validation-message validation-ok"></div>
-              <button class="button-success" onclick="registerRoll()">Confirmar tiro</button>
+              <div class="pending-item">
+                <div class="title">Rojo</div>
+                <div class="value" id="pendingRedValue">1</div>
+              </div>
+              <div class="pending-item">
+                <div class="title">Suma</div>
+                <div class="value" id="currentSum">2</div>
+              </div>
             </div>
+            <div id="validationMessage" class="validation-message validation-ok"></div>
+            <button class="button-success" onclick="registerRoll()">Confirmar tiro</button>
           </div>
+        </div>
       </div>
 
       <div class="bottom-grid">
         <div class="card">
           <h2>Resumen por jugador</h2>
           <div class="filter-row">
-            <select id="summaryFilter" onchange="renderSummary()">
+            <select id="summaryFilter" onchange="onFilterChange()">
               <option value="all">Todos los jugadores</option>
             </select>
           </div>
@@ -469,10 +505,11 @@
   <script>
     let players = [];
     let rolls = [];
-    let yellowChart, redChart, sumChart;
+    let combinedDiceChart, sumChart;
     let pendingYellow = 1;
     let pendingRed = 1;
     let selectedPlayerIndex = 0;
+    let activeFilter = 'all';
 
     const availableColors = ['red', 'white', 'orange', 'blue'];
     const colorLabels = {
@@ -486,7 +523,6 @@
       const count = parseInt(document.getElementById('playerCount').value, 10);
       const container = document.getElementById('playerConfigList');
       container.innerHTML = '';
-
       for (let i = 0; i < count; i++) {
         const row = document.createElement('div');
         row.className = 'player-setup-grid';
@@ -547,6 +583,17 @@
       });
     }
 
+    function getFilteredRolls() {
+      if (activeFilter === 'all') return rolls;
+      return rolls.filter(r => r.player === activeFilter);
+    }
+
+    function onFilterChange() {
+      activeFilter = document.getElementById('summaryFilter').value;
+      renderAll();
+      updateCharts();
+    }
+
     function startGame() {
       const count = parseInt(document.getElementById('playerCount').value, 10);
       const chosenColors = [];
@@ -560,7 +607,6 @@
           alert('No puedes repetir colores. Cada jugador debe tener un color distinto.');
           return;
         }
-
         chosenColors.push(color);
         configuredPlayers.push({ name, color, order: i + 1 });
       }
@@ -570,6 +616,7 @@
       pendingYellow = 1;
       pendingRed = 1;
       selectedPlayerIndex = 0;
+      activeFilter = 'all';
 
       document.getElementById('setupSection').classList.add('hidden');
       document.getElementById('appSection').classList.remove('hidden');
@@ -605,10 +652,7 @@
         player: currentPlayer.name,
         playerColor: currentPlayer.color,
         playerOrder: currentPlayer.order,
-        yellow,
-        red,
-        sum,
-        time
+        yellow, red, sum, time
       });
 
       selectedPlayerIndex = (selectedPlayerIndex + 1) % players.length;
@@ -637,6 +681,8 @@
       pendingYellow = 1;
       pendingRed = 1;
       selectedPlayerIndex = 0;
+      activeFilter = 'all';
+      document.getElementById('summaryFilter').value = 'all';
       refreshDiceButtonStates();
       updateCurrentSum();
       renderAll();
@@ -654,17 +700,19 @@
     }
 
     function renderAll() {
-      document.getElementById('totalRolls').innerText = rolls.length;
-      document.getElementById('lastSum').innerText = rolls.length ? rolls[rolls.length - 1].sum : '-';
-      renderHistory();
+      const filtered = getFilteredRolls();
+      // Stats: total tiros muestra filtrado si hay filtro
+      document.getElementById('totalRolls').innerText = activeFilter === 'all' ? rolls.length : filtered.length;
+      document.getElementById('lastSum').innerText = filtered.length ? filtered[filtered.length - 1].sum : '-';
+      renderHistory(filtered);
       renderSummary();
-      updateCompactBoxes();
+      updateCompactBoxes(filtered);
     }
 
-    function renderHistory() {
+    function renderHistory(filtered) {
       const history = document.getElementById('historyTable');
       history.innerHTML = '';
-      rolls.forEach((roll, index) => {
+      filtered.forEach((roll, index) => {
         history.innerHTML += `
           <tr>
             <td>${index + 1}</td>
@@ -680,17 +728,14 @@
 
     function renderSummary() {
       const summary = document.getElementById('playerSummary');
-      const selected = document.getElementById('summaryFilter').value;
       summary.innerHTML = '';
-
       players
-        .filter(player => selected === 'all' || player.name === selected)
+        .filter(player => activeFilter === 'all' || player.name === activeFilter)
         .forEach(player => {
           const playerRolls = rolls.filter(r => r.player === player.name);
           const avg = playerRolls.length
             ? (playerRolls.reduce((acc, r) => acc + r.sum, 0) / playerRolls.length).toFixed(2)
             : '0.00';
-
           summary.innerHTML += `
             <tr>
               <td>${player.name}</td>
@@ -701,11 +746,13 @@
         });
     }
 
-    function updateCompactBoxes() {
-      const lastRoll = rolls.length ? rolls[rolls.length - 1] : null;
+    function updateCompactBoxes(filtered) {
+      const lastRoll = filtered.length ? filtered[filtered.length - 1] : null;
       document.getElementById('lastYellowText').innerText = lastRoll ? `Valor ${lastRoll.yellow}` : 'Sin registros';
       document.getElementById('lastRedText').innerText = lastRoll ? `Valor ${lastRoll.red}` : 'Sin registros';
-      document.getElementById('lastPlayerTurnText').innerText = lastRoll ? lastRoll.player : 'Sin registros';
+      // El último turno siempre del historial global
+      const globalLast = rolls.length ? rolls[rolls.length - 1] : null;
+      document.getElementById('lastPlayerTurnText').innerText = globalLast ? globalLast.player : 'Sin registros';
     }
 
     function buildPlayerTurnButtons() {
@@ -736,7 +783,6 @@
       const currentPlayer = players[selectedPlayerIndex];
       const lastPlayerName = rolls.length ? rolls[rolls.length - 1].player : null;
       document.getElementById('turnIndicator').innerText = currentPlayer ? `Turno de: ${currentPlayer.name}` : 'Turno de: -';
-
       document.querySelectorAll('#playerTurnButtons .player-turn-btn').forEach((btn, index) => {
         const player = players[index];
         btn.classList.toggle('active', index === selectedPlayerIndex);
@@ -760,22 +806,30 @@
         }
       };
 
-      yellowChart = new Chart(document.getElementById('yellowChart'), {
+      // Gráfico combinado: dos datasets (amarillo y rojo), etiquetas 1-6
+      combinedDiceChart = new Chart(document.getElementById('combinedDiceChart'), {
         type: 'bar',
         data: {
           labels: ['1', '2', '3', '4', '5', '6'],
-          datasets: [{ data: [0,0,0,0,0,0], backgroundColor: '#eab308' }]
+          datasets: [
+            {
+              label: 'Amarillo',
+              data: [0,0,0,0,0,0],
+              backgroundColor: '#eab308',
+              borderRadius: 4
+            },
+            {
+              label: 'Rojo',
+              data: [0,0,0,0,0,0],
+              backgroundColor: '#dc2626',
+              borderRadius: 4
+            }
+          ]
         },
-        options: baseOptions
-      });
-
-      redChart = new Chart(document.getElementById('redChart'), {
-        type: 'bar',
-        data: {
-          labels: ['1', '2', '3', '4', '5', '6'],
-          datasets: [{ data: [0,0,0,0,0,0], backgroundColor: '#dc2626' }]
-        },
-        options: baseOptions
+        options: {
+          ...baseOptions,
+          plugins: { legend: { display: false } }
+        }
       });
 
       sumChart = new Chart(document.getElementById('sumChart'), {
@@ -789,12 +843,12 @@
     }
 
     function updateCharts() {
-      if (!yellowChart || !redChart || !sumChart) return;
-      yellowChart.data.datasets[0].data = getFrequency(rolls.map(r => r.yellow), 1, 6);
-      redChart.data.datasets[0].data = getFrequency(rolls.map(r => r.red), 1, 6);
-      sumChart.data.datasets[0].data = getFrequency(rolls.map(r => r.sum), 2, 12);
-      yellowChart.update();
-      redChart.update();
+      if (!combinedDiceChart || !sumChart) return;
+      const filtered = getFilteredRolls();
+      combinedDiceChart.data.datasets[0].data = getFrequency(filtered.map(r => r.yellow), 1, 6);
+      combinedDiceChart.data.datasets[1].data = getFrequency(filtered.map(r => r.red), 1, 6);
+      sumChart.data.datasets[0].data = getFrequency(filtered.map(r => r.sum), 2, 12);
+      combinedDiceChart.update();
       sumChart.update();
     }
 
