@@ -54,6 +54,13 @@
     .preview-title { font-size: 11px; color: #475569; margin-bottom: 4px; }
     .preview-value { font-size: 15px; font-weight: 700; }
 
+.btn-confirm {
+  height: 60px;
+  font-size: 16px;
+  border-radius: 10px;
+  letter-spacing: 0.5px;
+}
+
     /* === BARRA DE TURNO MORADA === */
     .turn-bar {
       background: linear-gradient(135deg, #581c87 0%, #6b21a8 60%, #7c3aed 100%);
@@ -120,11 +127,19 @@
     @media (max-width: 900px) {
       .setup-grid, .main-grid, .bottom-grid { grid-template-columns: 1fr; }
     }
-    @media (max-width: 600px) {
-      .player-setup-grid, .pending-roll-box, .sum-footer { grid-template-columns: 1fr; }
-      .turn-divider { display: none; }
-      .confirm-row { grid-template-columns: 1fr; }
-    }
+@media (max-width: 600px) {
+  .player-setup-grid,
+  .sum-footer {
+    grid-template-columns: 1fr;
+  }
+
+  .pending-roll-box {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .turn-divider { display: none; }
+  .confirm-row { grid-template-columns: 1fr; }
+}
   </style>
 </head>
 <body>
@@ -219,7 +234,7 @@
         </div>
         <div style="display:flex;flex-direction:column;gap:5px;min-width:130px;">
           <div id="validationMessage" class="validation-message validation-ok"></div>
-          <button class="button-success" onclick="registerRoll()">Confirmar tiro</button>
+          <button class="button-success btn-confirm" onclick="registerRoll()">Confirmar tiro</button>
         </div>
       </div>
     </div>
