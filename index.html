@@ -188,6 +188,84 @@
     .dice-row-label.yellow { color: #92400e; }
     .dice-row-label.red { color: #991b1b; }
 
+    .dice-entry-section {
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: rgba(248,250,252,0.88);
+    }
+
+    .dice-entry-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .dice-entry-column {
+      border-radius: 12px;
+      padding: 8px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .dice-entry-yellow { background: #fffbeb; }
+    .dice-entry-red { background: #fef2f2; }
+
+    .dice-entry-label {
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .dice-entry-label.yellow { color: #92400e; }
+    .dice-entry-label.red { color: #991b1b; }
+
+    .dice-choice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 32px);
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .dice-choice-btn {
+      width: 38px;
+      height: 38px;
+      min-height: 38px;
+      padding: 0;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: none;
+    }
+
+    .dice-choice-btn:hover {
+      background: rgba(15,23,42,0.06);
+    }
+
+    .dice-choice-btn.active-yellow,
+    .dice-choice-btn.active-red {
+      background: rgba(124,58,237,0.12);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.22);
+    }
+
+    .dice-choice-btn.active-yellow .pending-die {
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245,158,11,0.28), 0 2px 7px rgba(0,0,0,0.18);
+      transform: translateY(-1px);
+    }
+
+    .dice-choice-btn.active-red .pending-die {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.24), 0 2px 7px rgba(0,0,0,0.18);
+      transform: translateY(-1px);
+    }
+
     .sum-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
     .die-card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; display: flex; align-items: center; gap: 10px; min-height: 100px; }
     .die-card.yellow { background: #fffbeb; }
@@ -477,6 +555,30 @@
       .color-buttons { margin-bottom: 12px; }
       .sum-footer { grid-template-columns: 1fr 1fr; }
       .pending-roll-box { grid-template-columns: repeat(3, 1fr); }
+
+      .dice-entry-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+
+      .dice-entry-section {
+        padding: 8px;
+      }
+
+      .dice-entry-column {
+        padding: 6px;
+      }
+
+      .dice-choice-grid {
+        grid-template-columns: repeat(3, 30px);
+        gap: 6px;
+      }
+
+      .dice-choice-btn {
+        width: 34px;
+        height: 34px;
+        min-height: 34px;
+      }
       .turn-divider { display: none; }
       .confirm-row { grid-template-columns: 1fr; }
       .die-card { min-height: 86px; padding: 8px; gap: 8px; }
@@ -584,7 +686,7 @@
           </div>
           <div class="combined-legend"><div class="legend-item"><div class="legend-swatch" style="background:#eab308;"></div><span>Amarillo</span></div><div class="legend-item"><div class="legend-swatch" style="background:#dc2626;"></div><span>Rojo</span></div></div>
           <div class="chart-box-combined"><canvas id="combinedDiceChart"></canvas></div>
-          <div class="dice-section"><div class="dice-row-label yellow">Dado amarillo</div><div id="yellowButtons" class="dice-row"></div><div class="dice-row-label red" style="margin-top:6px;">Dado rojo</div><div id="redButtons" class="dice-row"></div></div>
+          
         </div>
       </div>
     </div>
@@ -593,6 +695,21 @@
       <h2>Confirmar tiro</h2>
       <div class="turn-bar"><div class="turn-block"><div class="turn-label">Turno actual</div><div class="turn-value" id="turnIndicatorName">-</div></div><div class="turn-divider"></div><div class="turn-block"><div class="turn-last-label">Último turno registrado</div><div class="turn-last-value" id="lastPlayerTurnText">Sin registros</div></div></div>
       <div class="player-turn-buttons" id="playerTurnButtons"></div>
+
+      <div class="dice-entry-section">
+        <div class="dice-entry-grid">
+          <div class="dice-entry-column dice-entry-yellow">
+            <div class="dice-entry-label yellow">Dado amarillo</div>
+            <div id="yellowButtons" class="dice-choice-grid"></div>
+          </div>
+
+          <div class="dice-entry-column dice-entry-red">
+            <div class="dice-entry-label red">Dado rojo</div>
+            <div id="redButtons" class="dice-choice-grid"></div>
+          </div>
+        </div>
+      </div>
+
       <div class="confirm-row">
         <div class="pending-roll-box">
           <div class="pending-item"><div class="title">Amarillo</div><div class="pending-die-wrap"><div class="pending-die yellow die-1" id="pendingYellowDie"><span class="pip tl"></span><span class="pip tc"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mc"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip bc"></span><span class="pip br"></span></div></div></div>
@@ -847,15 +964,32 @@
     setTurnTheme(null);
   }
 
+  function createSmallDieElement(type, value) {
+    const die = document.createElement('div');
+    die.className = `pending-die ${type === 'yellow' ? 'yellow' : 'red'} die-${value}`;
+    die.setAttribute('aria-hidden', 'true');
+
+    ['tl', 'tc', 'tr', 'ml', 'mc', 'mr', 'bl', 'bc', 'br'].forEach(pos => {
+      const pip = document.createElement('span');
+      pip.className = `pip ${pos}`;
+      die.appendChild(pip);
+    });
+
+    return die;
+  }
+
   function buildDiceButtons(containerId, type) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
+
     for (let i = 1; i <= 6; i++) {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'dice-btn';
-      btn.textContent = i;
+      btn.className = 'dice-choice-btn';
+      btn.title = `${type === 'yellow' ? 'Dado amarillo' : 'Dado rojo'}: ${i}`;
+      btn.setAttribute('aria-label', `${type === 'yellow' ? 'Dado amarillo' : 'Dado rojo'} valor ${i}`);
       btn.onclick = () => selectDieValue(type, i);
+      btn.appendChild(createSmallDieElement(type, i));
       container.appendChild(btn);
     }
   }
@@ -875,8 +1009,14 @@
   }
 
   function refreshDiceButtonStates() {
-    document.querySelectorAll('#yellowButtons .dice-btn').forEach((btn, i) => btn.classList.toggle('active-yellow', i + 1 === pendingYellow));
-    document.querySelectorAll('#redButtons .dice-btn').forEach((btn, i) => btn.classList.toggle('active-red', i + 1 === pendingRed));
+    document.querySelectorAll('#yellowButtons .dice-choice-btn').forEach((btn, i) => {
+      btn.classList.toggle('active-yellow', i + 1 === pendingYellow);
+    });
+
+    document.querySelectorAll('#redButtons .dice-choice-btn').forEach((btn, i) => {
+      btn.classList.toggle('active-red', i + 1 === pendingRed);
+    });
+
     setDieFace('pendingYellowDie', pendingYellow);
     setDieFace('pendingRedDie', pendingRed);
   }
