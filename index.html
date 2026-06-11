@@ -134,6 +134,13 @@
       box-shadow: 0 4px 10px rgba(124,58,237,0.35);
     }
 
+    .saved-players-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
     .player-setup-grid {
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
@@ -679,8 +686,9 @@
           <button id="btnPlayers4" class="player-count-btn active" onclick="selectPlayerCount(4)">4</button>
         </div>
 
-        <div style="margin-top:8px;">
+        <div class="saved-players-actions">
           <button onclick="startGame()">Comenzar</button>
+          <button class="button-secondary" onclick="clearSavedPlayers()">Borrar jugadores guardados</button>
         </div>
       </div>
 
@@ -843,6 +851,7 @@
   let pendingRed = 1;
   let selectedPlayerIndex = 0;
   let activeFilter = 'all';
+  const savedPlayersStorageKey = 'catanDiceSavedPlayers';
 
   const availableColors = ['red', 'white', 'orange', 'blue', 'green', 'brown'];
   const colorLabels = {
@@ -863,6 +872,56 @@
     brown:  { bg: '#6E4A2A', border: '#5A3C22', text: '#fff' }
   };
 
+  function getSavedPlayersConfig() {
+    try {
+      const raw = localStorage.getItem(savedPlayersStorageKey);
+      return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function savePlayersConfig(configuredPlayers) {
+    try {
+      localStorage.setItem(savedPlayersStorageKey, JSON.stringify({
+        playerCount: selectedPlayerCount,
+        players: configuredPlayers.map(player => ({
+          name: player.name,
+          color: player.color
+        }))
+      }));
+    } catch (error) {
+      console.warn('No fue posible guardar los jugadores.', error);
+    }
+  }
+
+  function clearSavedPlayers() {
+    localStorage.removeItem(savedPlayersStorageKey);
+    selectedPlayerCount = 4;
+
+    document.querySelectorAll('.player-count-btn').forEach(btn => {
+      btn.classList.remove('active');
+    });
+
+    document.getElementById('btnPlayers4').classList.add('active');
+    renderPlayerConfigInputs();
+  }
+
+  function loadInitialSavedPlayers() {
+    const saved = getSavedPlayersConfig();
+    const savedCount = Number(saved?.playerCount);
+
+    if ([2, 3, 4].includes(savedCount)) {
+      selectedPlayerCount = savedCount;
+    }
+
+    document.querySelectorAll('.player-count-btn').forEach(btn => {
+      btn.classList.remove('active');
+    });
+
+    document.getElementById(`btnPlayers${selectedPlayerCount}`).classList.add('active');
+  }
+
   function selectPlayerCount(count) {
     selectedPlayerCount = count;
 
@@ -878,20 +937,24 @@
   function renderPlayerConfigInputs() {
     const count = selectedPlayerCount;
     const container = document.getElementById('playerConfigList');
+    const saved = getSavedPlayersConfig();
     container.innerHTML = '';
 
     for (let i = 0; i < count; i++) {
+      const savedPlayer = saved?.players?.[i];
+      const savedName = savedPlayer?.name || `Jugador ${i + 1}`;
+      const savedColor = availableColors.includes(savedPlayer?.color) ? savedPlayer.color : availableColors[i];
       const row = document.createElement('div');
       row.className = 'player-setup-grid';
       row.innerHTML = `
         <div>
           <label for="playerName${i}">Nombre jugador ${i + 1}</label>
-          <input id="playerName${i}" type="text" value="Jugador ${i + 1}" maxlength="30" />
+          <input id="playerName${i}" type="text" value="${savedName}" maxlength="30" />
         </div>
         <div>
           <label for="playerColor${i}">Color</label>
           <select id="playerColor${i}">
-            ${availableColors.map(c => `<option value="${c}" ${availableColors[i] === c ? 'selected' : ''}>${colorLabels[c]}</option>`).join('')}
+            ${availableColors.map(c => `<option value="${c}" ${savedColor === c ? 'selected' : ''}>${colorLabels[c]}</option>`).join('')}
           </select>
         </div>
       `;
@@ -1007,6 +1070,7 @@
     }
 
     players = configuredPlayers;
+    savePlayersConfig(configuredPlayers);
     rolls = [];
     pendingYellow = 1;
     pendingRed = 1;
@@ -1250,6 +1314,7 @@
     sumChart.update();
   }
 
+  loadInitialSavedPlayers();
   renderPlayerConfigInputs();
 </script>
 </body>
