@@ -287,6 +287,185 @@
     .legend-item { display: flex; align-items: center; gap: 5px; }
     .legend-swatch { width: 12px; height: 12px; border-radius: 3px; }
 
+
+
+    .menu-fab {
+      position: fixed;
+      left: max(10px, env(safe-area-inset-left));
+      top: max(10px, env(safe-area-inset-top));
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: rgba(17,24,39,0.88);
+      color: #fff;
+      z-index: 1200;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.28);
+      backdrop-filter: blur(10px);
+      font-size: 22px;
+      line-height: 1;
+      padding: 0;
+    }
+
+    .menu-fab:hover { background: rgba(17,24,39,0.96); }
+
+    .side-menu-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.42);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease;
+      z-index: 1190;
+    }
+
+    .side-menu-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .side-menu {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: min(330px, 88vw);
+      padding: calc(16px + env(safe-area-inset-top)) 14px calc(16px + env(safe-area-inset-bottom)) 14px;
+      background: rgba(255,255,255,0.97);
+      color: #111827;
+      box-shadow: 10px 0 30px rgba(0,0,0,0.28);
+      transform: translateX(-105%);
+      transition: transform 220ms ease;
+      z-index: 1210;
+      backdrop-filter: blur(14px);
+      overflow-y: auto;
+    }
+
+    .side-menu.open { transform: translateX(0); }
+
+    .side-menu-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .side-menu-title {
+      font-size: 17px;
+      font-weight: 800;
+      margin: 0;
+      color: #111827;
+    }
+
+    .side-menu-close {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: #e5e7eb;
+      color: #111827;
+      padding: 0;
+      font-size: 22px;
+    }
+
+    .side-menu-close:hover { background: #d1d5db; }
+
+    .menu-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .menu-row-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1f2937;
+      line-height: 1.2;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+    }
+
+    .visibility-switch,
+    .mini-switch {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .visibility-switch input,
+    .mini-switch input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .switch-track {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+      border-radius: 999px;
+      background: #cbd5e1;
+      transition: background 160ms ease;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.18);
+    }
+
+    .switch-track::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+      transition: transform 160ms ease;
+    }
+
+    .visibility-switch input:checked + .switch-track,
+    .mini-switch input:checked + .switch-track {
+      background: #7c3aed;
+    }
+
+    .visibility-switch input:checked + .switch-track::after,
+    .mini-switch input:checked + .switch-track::after {
+      transform: translateX(22px);
+    }
+
+    .mini-switch .switch-track {
+      width: 42px;
+      height: 24px;
+    }
+
+    .mini-switch .switch-track::after {
+      width: 18px;
+      height: 18px;
+    }
+
+    .mini-switch input:checked + .switch-track::after {
+      transform: translateX(18px);
+    }
+
+    .section-hidden {
+      display: none !important;
+    }
+
     @media (max-width: 900px) { .setup-grid, .main-grid, .bottom-grid { grid-template-columns: 1fr; } }
 
     @media (max-width: 600px) {
@@ -320,6 +499,34 @@
 </head>
 
 <body>
+
+<button class="menu-fab" type="button" onclick="toggleSideMenu(true)" aria-label="Abrir configuración">☰</button>
+<div id="sideMenuBackdrop" class="side-menu-backdrop" onclick="toggleSideMenu(false)"></div>
+<aside id="sideMenu" class="side-menu" aria-label="Menú de configuración">
+  <div class="side-menu-header">
+    <h2 class="side-menu-title">Configuración</h2>
+    <button class="side-menu-close" type="button" onclick="toggleSideMenu(false)" aria-label="Cerrar menú">×</button>
+  </div>
+  <p class="small-note">Activa o desactiva los elementos que deseas ver en la aplicación. Esta configuración queda guardada en este dispositivo.</p>
+
+  <div class="menu-row">
+    <div class="menu-row-label">Distribución de la suma</div>
+    <label class="visibility-switch"><input type="checkbox" data-menu-switch="sumDistribution" onchange="setSectionVisibility('sumDistribution', this.checked)"><span class="switch-track"></span></label>
+  </div>
+  <div class="menu-row">
+    <div class="menu-row-label">Frecuencia de dados</div>
+    <label class="visibility-switch"><input type="checkbox" data-menu-switch="diceFrequency" onchange="setSectionVisibility('diceFrequency', this.checked)"><span class="switch-track"></span></label>
+  </div>
+  <div class="menu-row">
+    <div class="menu-row-label">Resumen por jugador</div>
+    <label class="visibility-switch"><input type="checkbox" data-menu-switch="playerSummary" onchange="setSectionVisibility('playerSummary', this.checked)"><span class="switch-track"></span></label>
+  </div>
+  <div class="menu-row">
+    <div class="menu-row-label">Historial de tiros</div>
+    <label class="visibility-switch"><input type="checkbox" data-menu-switch="rollHistory" onchange="setSectionVisibility('rollHistory', this.checked)"><span class="switch-track"></span></label>
+  </div>
+</aside>
+
 <div class="container">
   <div id="setupSection" class="card">
     <h1>Registro de Dados - CATAN</h1>
@@ -350,9 +557,12 @@
       <div class="stat-box"><div class="label">Jugadores</div><div id="totalPlayers" class="value">0</div></div>
     </div>
 
-    <div class="main-grid">
-      <div class="card">
-        <h2>Distribución de la suma</h2>
+    <div class="main-grid" id="mainGrid">
+      <div class="card app-visibility-section" data-visibility-section="sumDistribution">
+        <div class="section-header">
+          <h2>Distribución de la suma</h2>
+          <label class="mini-switch" title="Ocultar distribución de la suma"><input type="checkbox" data-section-switch="sumDistribution" onchange="setSectionVisibility('sumDistribution', this.checked)"><span class="switch-track"></span></label>
+        </div>
         <div class="chart-box-lg"><canvas id="sumChart"></canvas></div>
         <div class="sum-footer">
           <div class="die-card yellow">
@@ -366,9 +576,12 @@
         </div>
       </div>
 
-      <div class="right-stack">
+      <div class="right-stack app-visibility-section" data-visibility-section="diceFrequency">
         <div class="card">
-          <h2>Frecuencia de dados</h2>
+          <div class="section-header">
+            <h2>Frecuencia de dados</h2>
+            <label class="mini-switch" title="Ocultar frecuencia de dados"><input type="checkbox" data-section-switch="diceFrequency" onchange="setSectionVisibility('diceFrequency', this.checked)"><span class="switch-track"></span></label>
+          </div>
           <div class="combined-legend"><div class="legend-item"><div class="legend-swatch" style="background:#eab308;"></div><span>Amarillo</span></div><div class="legend-item"><div class="legend-swatch" style="background:#dc2626;"></div><span>Rojo</span></div></div>
           <div class="chart-box-combined"><canvas id="combinedDiceChart"></canvas></div>
           <div class="dice-section"><div class="dice-row-label yellow">Dado amarillo</div><div id="yellowButtons" class="dice-row"></div><div class="dice-row-label red" style="margin-top:6px;">Dado rojo</div><div id="redButtons" class="dice-row"></div></div>
@@ -390,16 +603,30 @@
       </div>
     </div>
 
-    <div class="bottom-grid">
-      <div class="card"><h2>Resumen por jugador</h2><div class="filter-player-buttons" id="filterPlayerButtons"></div><div class="summary-scroll"><table><thead><tr><th>Jugador</th><th>Tiros</th><th>Prom.</th></tr></thead><tbody id="playerSummary"></tbody></table></div></div>
-      <div class="actions-panel"><div class="card"><button class="button-warning" onclick="undoLastRoll()">Deshacer última jugada</button></div><div class="card"><button class="button-secondary" onclick="resetData()">Reiniciar</button></div></div>
-      <div class="card"><h2>Historial de tiros</h2><div class="history-scroll"><table><thead><tr><th>#</th><th>Jugador</th><th>A</th><th>R</th><th>Suma</th><th>Hora</th></tr></thead><tbody id="historyTable"></tbody></table></div></div>
+    <div class="bottom-grid" id="bottomGrid">
+      <div class="card app-visibility-section" data-visibility-section="playerSummary">
+        <div class="section-header">
+          <h2>Resumen por jugador</h2>
+          <label class="mini-switch" title="Ocultar resumen por jugador"><input type="checkbox" data-section-switch="playerSummary" onchange="setSectionVisibility('playerSummary', this.checked)"><span class="switch-track"></span></label>
+        </div>
+        <div class="filter-player-buttons" id="filterPlayerButtons"></div>
+        <div class="summary-scroll"><table><thead><tr><th>Jugador</th><th>Tiros</th><th>Prom.</th></tr></thead><tbody id="playerSummary"></tbody></table></div>
+      </div>
+      <div class="actions-panel" id="actionsPanel"><div class="card"><button class="button-warning" onclick="undoLastRoll()">Deshacer última jugada</button></div><div class="card"><button class="button-secondary" onclick="resetData()">Reiniciar</button></div></div>
+      <div class="card app-visibility-section" data-visibility-section="rollHistory">
+        <div class="section-header">
+          <h2>Historial de tiros</h2>
+          <label class="mini-switch" title="Ocultar historial de tiros"><input type="checkbox" data-section-switch="rollHistory" onchange="setSectionVisibility('rollHistory', this.checked)"><span class="switch-track"></span></label>
+        </div>
+        <div class="history-scroll"><table><thead><tr><th>#</th><th>Jugador</th><th>A</th><th>R</th><th>Suma</th><th>Hora</th></tr></thead><tbody id="historyTable"></tbody></table></div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
   const STORAGE_KEY = 'catanDicePlayersV2';
+  const VISIBILITY_STORAGE_KEY = 'catanDiceVisibilityV1';
   let players = [];
   let rolls = [];
   let combinedDiceChart, sumChart;
@@ -409,6 +636,12 @@
   let activeFilter = 'all';
   let selectedPlayerCount = 4;
   let playerColorSelections = ['red', 'white', 'orange', 'blue'];
+  let visibilityConfig = {
+    sumDistribution: true,
+    diceFrequency: true,
+    playerSummary: true,
+    rollHistory: true
+  };
 
   const availableColors = ['red', 'white', 'orange', 'blue'];
   const colorLabels = { red:'Rojo', white:'Blanco Marfil', orange:'Naranja', blue:'Azul' };
@@ -418,6 +651,86 @@
     orange: { bg: '#E67E22', border: '#CA6F1E', text: '#fff', page1: '#ea580c', page2: '#9a3412', dark: '#9a3412' },
     blue:   { bg: '#1A6FA8', border: '#145580', text: '#fff', page1: '#1d4ed8', page2: '#0f172a', dark: '#1e3a8a' }
   };
+
+
+  function toggleSideMenu(open) {
+    document.getElementById('sideMenu')?.classList.toggle('open', open);
+    document.getElementById('sideMenuBackdrop')?.classList.toggle('open', open);
+  }
+
+  function loadVisibilityConfig() {
+    try {
+      const raw = localStorage.getItem(VISIBILITY_STORAGE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      visibilityConfig = {
+        sumDistribution: saved.sumDistribution !== false,
+        diceFrequency: saved.diceFrequency !== false,
+        playerSummary: saved.playerSummary !== false,
+        rollHistory: saved.rollHistory !== false
+      };
+    } catch {
+      visibilityConfig = {
+        sumDistribution: true,
+        diceFrequency: true,
+        playerSummary: true,
+        rollHistory: true
+      };
+    }
+  }
+
+  function saveVisibilityConfig() {
+    localStorage.setItem(VISIBILITY_STORAGE_KEY, JSON.stringify(visibilityConfig));
+  }
+
+  function setSectionVisibility(section, visible) {
+    visibilityConfig[section] = !!visible;
+    saveVisibilityConfig();
+    applyVisibilitySettings();
+  }
+
+  function applyVisibilitySettings() {
+    Object.keys(visibilityConfig).forEach(section => {
+      document.querySelectorAll(`[data-visibility-section="${section}"]`).forEach(el => {
+        el.classList.toggle('section-hidden', !visibilityConfig[section]);
+      });
+
+      document.querySelectorAll(`[data-menu-switch="${section}"], [data-section-switch="${section}"]`).forEach(input => {
+        input.checked = !!visibilityConfig[section];
+      });
+    });
+
+    updateVisibilityLayouts();
+
+    setTimeout(() => {
+      if (sumChart && visibilityConfig.sumDistribution) sumChart.resize();
+      if (combinedDiceChart && visibilityConfig.diceFrequency) combinedDiceChart.resize();
+    }, 80);
+  }
+
+  function updateVisibilityLayouts() {
+    const mainGrid = document.getElementById('mainGrid');
+    if (mainGrid) {
+      const sumVisible = !!visibilityConfig.sumDistribution;
+      const diceVisible = !!visibilityConfig.diceFrequency;
+      mainGrid.style.display = (sumVisible || diceVisible) ? 'grid' : 'none';
+      mainGrid.style.gridTemplateColumns = (sumVisible && diceVisible) ? '' : '1fr';
+    }
+
+    const bottomGrid = document.getElementById('bottomGrid');
+    if (bottomGrid) {
+      const summaryVisible = !!visibilityConfig.playerSummary;
+      const historyVisible = !!visibilityConfig.rollHistory;
+
+      if (summaryVisible && historyVisible) {
+        bottomGrid.style.gridTemplateColumns = '';
+      } else if (summaryVisible || historyVisible) {
+        bottomGrid.style.gridTemplateColumns = '0.42fr 1fr';
+      } else {
+        bottomGrid.style.gridTemplateColumns = '1fr';
+      }
+    }
+  }
 
   function getDefaultColor(index) { return availableColors[index] || 'blue'; }
 
@@ -515,6 +828,7 @@
   }
 
   function initializeConfig() {
+    loadVisibilityConfig();
     const saved = loadSavedConfig();
     if (saved) {
       selectedPlayerCount = Math.min(4, Math.max(2, Number(saved.count) || 4));
@@ -632,6 +946,7 @@
     updateCharts();
     updateTurnUI();
     setValidationMessage('', false);
+    applyVisibilitySettings();
   }
 
   function updateCurrentSum() { document.getElementById('currentSum').innerText = pendingYellow + pendingRed; }
