@@ -2,49 +2,48 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CATAN - Registro de Dados</title>
-<link rel="apple-touch-icon" href="Icon.png">
-<link rel="icon" type="image/png" sizes="512x512" href="Icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="Icon.png">  
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CATAN Dice">
-<meta name="theme-color" content="#581c87">
 
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CATAN Dice">
+  <meta name="theme-color" content="#581c87">
+
+  <link rel="apple-touch-icon" href="Icon.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="Icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="Icon.png">
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     * { box-sizing: border-box; }
 
-    
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  min-height: 100%;
-  overflow-x: hidden;
-  background: #f4f6f8;
-  -webkit-tap-highlight-color: transparent;
-}
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+      background: #f4f6f8;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  color: #1f2937;
-  padding-top: env(safe-area-inset-top);
-  padding-right: env(safe-area-inset-right);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-}
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #1f2937;
+      padding-top: env(safe-area-inset-top);
+      padding-right: env(safe-area-inset-right);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+    }
 
-.container {
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 8px;
-}
-
+    .container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 8px;
+    }
 
     h1, h2, h3 { margin: 0 0 6px 0; line-height: 1.2; }
     h1 { font-size: 20px; }
@@ -84,10 +83,13 @@ body {
     }
 
     button:hover { background: #1d4ed8; }
+
     .button-success { background: #16a34a; }
     .button-success:hover { background: #15803d; }
+
     .button-secondary { background: #64748b; }
     .button-secondary:hover { background: #475569; }
+
     .button-warning { background: #7c3aed; }
     .button-warning:hover { background: #6d28d9; }
 
@@ -99,9 +101,37 @@ body {
 
     .setup-grid {
       display: grid;
-      grid-template-columns: 180px 1fr;
+      grid-template-columns: 220px 1fr;
       gap: 8px;
       align-items: start;
+    }
+
+    .player-count-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .player-count-btn {
+      height: 55px;
+      border-radius: 14px;
+      background: #e5e7eb;
+      color: #374151;
+      font-size: 22px;
+      font-weight: 800;
+      border: 2px solid transparent;
+    }
+
+    .player-count-btn:hover {
+      background: #d1d5db;
+    }
+
+    .player-count-btn.active {
+      background: linear-gradient(135deg, #581c87, #7c3aed);
+      color: white;
+      border-color: #c084fc;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(124,58,237,0.35);
     }
 
     .player-setup-grid {
@@ -302,7 +332,6 @@ body {
     .pending-die .pip.bc { bottom: 4px; left: 50%; transform: translateX(-50%); }
     .pending-die .pip.br { bottom: 4px; right: 4px; }
 
-    /* Dados grandes */
     .die-face.die-1 .mc,
     .die-face.die-2 .tl, .die-face.die-2 .br,
     .die-face.die-3 .tl, .die-face.die-3 .mc, .die-face.die-3 .br,
@@ -312,7 +341,6 @@ body {
       opacity: 1;
     }
 
-    /* Dados pequeños */
     .pending-die.die-1 .mc,
     .pending-die.die-2 .tl, .pending-die.die-2 .br,
     .pending-die.die-3 .tl, .pending-die.die-3 .mc, .pending-die.die-3 .br,
@@ -552,24 +580,30 @@ body {
       }
     }
 
-@media (max-width: 600px) {
-  .container {
-    padding: 6px;
-  }
+    @media (max-width: 600px) {
+      .container {
+        padding: 6px;
+      }
 
-  .card {
-    border-radius: 12px;
-    padding: 8px;
-  }
+      .card {
+        border-radius: 12px;
+        padding: 8px;
+      }
 
-  button,
-  input,
-  select {
-    min-height: 44px;
-  }
-}
+      button,
+      input,
+      select {
+        min-height: 44px;
+      }
 
-      /* Mantener los dos dados en una sola línea */
+      .setup-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .player-setup-grid {
+        grid-template-columns: 1fr;
+      }
+
       .sum-footer {
         grid-template-columns: 1fr 1fr;
       }
@@ -578,8 +612,13 @@ body {
         grid-template-columns: repeat(3, 1fr);
       }
 
-      .turn-divider { display: none; }
-      .confirm-row { grid-template-columns: 1fr; }
+      .turn-divider {
+        display: none;
+      }
+
+      .confirm-row {
+        grid-template-columns: 1fr;
+      }
 
       .die-card {
         min-height: 86px;
@@ -629,16 +668,22 @@ body {
   <div id="setupSection" class="card">
     <h1>Registro de Dados - CATAN</h1>
     <p class="small-note">Configura hasta 4 jugadores. El orden de ingreso será el orden de lanzamiento.</p>
+
     <div class="setup-grid">
       <div>
-        <label for="playerCount">Número de jugadores</label>
-        <select id="playerCount">
-          <option value="2">2 jugadores</option>
-          <option value="3">3 jugadores</option>
-          <option value="4" selected>4 jugadores</option>
-        </select>
-        <div style="margin-top:8px;"><button onclick="startGame()">Comenzar</button></div>
+        <label>Número de jugadores</label>
+
+        <div class="player-count-buttons">
+          <button id="btnPlayers2" class="player-count-btn" onclick="selectPlayerCount(2)">2</button>
+          <button id="btnPlayers3" class="player-count-btn" onclick="selectPlayerCount(3)">3</button>
+          <button id="btnPlayers4" class="player-count-btn active" onclick="selectPlayerCount(4)">4</button>
+        </div>
+
+        <div style="margin-top:8px;">
+          <button onclick="startGame()">Comenzar</button>
+        </div>
       </div>
+
       <div>
         <label>Jugadores y color</label>
         <div id="playerConfigList"></div>
@@ -793,6 +838,7 @@ body {
   let players = [];
   let rolls = [];
   let combinedDiceChart, sumChart;
+  let selectedPlayerCount = 4;
   let pendingYellow = 1;
   let pendingRed = 1;
   let selectedPlayerIndex = 0;
@@ -814,11 +860,23 @@ body {
     orange: { bg: '#E67E22', border: '#CA6F1E', text: '#fff' },
     blue:   { bg: '#1A6FA8', border: '#145580', text: '#fff' },
     green:  { bg: '#1E8449', border: '#196F3D', text: '#fff' },
-    brown:  { bg: '#6E4A2A', border: '#5A3C22', text: '#fff' },
+    brown:  { bg: '#6E4A2A', border: '#5A3C22', text: '#fff' }
   };
 
+  function selectPlayerCount(count) {
+    selectedPlayerCount = count;
+
+    document.querySelectorAll('.player-count-btn').forEach(btn => {
+      btn.classList.remove('active');
+    });
+
+    document.getElementById(`btnPlayers${count}`).classList.add('active');
+
+    renderPlayerConfigInputs();
+  }
+
   function renderPlayerConfigInputs() {
-    const count = parseInt(document.getElementById('playerCount').value, 10);
+    const count = selectedPlayerCount;
     const container = document.getElementById('playerConfigList');
     container.innerHTML = '';
 
@@ -833,14 +891,13 @@ body {
         <div>
           <label for="playerColor${i}">Color</label>
           <select id="playerColor${i}">
-            ${availableColors.map(c => `<option value="${c}" ${availableColors[i]===c?'selected':''}>${colorLabels[c]}</option>`).join('')}
+            ${availableColors.map(c => `<option value="${c}" ${availableColors[i] === c ? 'selected' : ''}>${colorLabels[c]}</option>`).join('')}
           </select>
-        </div>`;
+        </div>
+      `;
       container.appendChild(row);
     }
   }
-
-  document.getElementById('playerCount').addEventListener('change', renderPlayerConfigInputs);
 
   function buildDiceButtons(containerId, type) {
     const container = document.getElementById(containerId);
@@ -862,13 +919,19 @@ body {
 
     die.classList.remove('die-1', 'die-2', 'die-3', 'die-4', 'die-5', 'die-6');
 
-    if (value >= 1 && value <= 6) die.classList.add(`die-${value}`);
-    else die.classList.add('die-1');
+    if (value >= 1 && value <= 6) {
+      die.classList.add(`die-${value}`);
+    } else {
+      die.classList.add('die-1');
+    }
   }
 
   function selectDieValue(type, value) {
-    if (type === 'yellow') pendingYellow = value;
-    else pendingRed = value;
+    if (type === 'yellow') {
+      pendingYellow = value;
+    } else {
+      pendingRed = value;
+    }
 
     refreshDiceButtonStates();
     updateCurrentSum();
@@ -926,7 +989,7 @@ body {
   }
 
   function startGame() {
-    const count = parseInt(document.getElementById('playerCount').value, 10);
+    const count = selectedPlayerCount;
     const chosenColors = [];
     const configuredPlayers = [];
 
@@ -1031,7 +1094,9 @@ body {
 
   function getFrequency(values, min, max) {
     const r = [];
-    for (let i = min; i <= max; i++) r.push(values.filter(v => v === i).length);
+    for (let i = min; i <= max; i++) {
+      r.push(values.filter(v => v === i).length);
+    }
     return r;
   }
 
@@ -1051,7 +1116,16 @@ body {
     h.innerHTML = '';
 
     filtered.forEach((roll, i) => {
-      h.innerHTML += `<tr><td>${i + 1}</td><td>${roll.player}</td><td>${roll.yellow}</td><td>${roll.red}</td><td>${roll.sum}</td><td>${roll.time}</td></tr>`;
+      h.innerHTML += `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${roll.player}</td>
+          <td>${roll.yellow}</td>
+          <td>${roll.red}</td>
+          <td>${roll.sum}</td>
+          <td>${roll.time}</td>
+        </tr>
+      `;
     });
   }
 
@@ -1064,7 +1138,14 @@ body {
       .forEach(player => {
         const pr = rolls.filter(r => r.player === player.name);
         const avg = pr.length ? (pr.reduce((a, r) => a + r.sum, 0) / pr.length).toFixed(2) : '0.00';
-        s.innerHTML += `<tr><td>${player.name}</td><td>${pr.length}</td><td>${avg}</td></tr>`;
+
+        s.innerHTML += `
+          <tr>
+            <td>${player.name}</td>
+            <td>${pr.length}</td>
+            <td>${avg}</td>
+          </tr>
+        `;
       });
   }
 
@@ -1139,8 +1220,8 @@ body {
       data: {
         labels: ['1','2','3','4','5','6'],
         datasets: [
-          { label:'Amarillo', data:[0,0,0,0,0,0], backgroundColor:'#eab308', borderRadius:4 },
-          { label:'Rojo', data:[0,0,0,0,0,0], backgroundColor:'#dc2626', borderRadius:4 }
+          { label: 'Amarillo', data: [0,0,0,0,0,0], backgroundColor: '#eab308', borderRadius: 4 },
+          { label: 'Rojo', data: [0,0,0,0,0,0], backgroundColor: '#dc2626', borderRadius: 4 }
         ]
       },
       options: { ...base }
@@ -1150,7 +1231,7 @@ body {
       type: 'bar',
       data: {
         labels: ['2','3','4','5','6','7','8','9','10','11','12'],
-        datasets: [{ data:[0,0,0,0,0,0,0,0,0,0,0], backgroundColor:'#2563eb' }]
+        datasets: [{ data: [0,0,0,0,0,0,0,0,0,0,0], backgroundColor: '#2563eb' }]
       },
       options: base
     });
