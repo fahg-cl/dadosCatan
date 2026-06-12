@@ -175,7 +175,7 @@
 
     .main-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 8px; align-items: start; }
     .right-stack { display: grid; gap: 8px; }
-    .chart-box-lg { height: 340px; }
+    .chart-box-lg { height: 200px; }
     .chart-box-combined { height: 200px; }
 
     .dice-section { margin-top: 8px; }
@@ -224,25 +224,48 @@
 
     .dice-choice-grid {
       display: grid;
-      grid-template-columns: repeat(3, 32px);
+      grid-template-columns: repeat(6, 46px);
       gap: 8px;
       justify-content: center;
       align-items: center;
+      overflow-x: auto;
+      padding: 3px 2px 5px;
     }
 
     .dice-choice-btn {
-      width: 38px;
-      height: 38px;
-      min-height: 38px;
+      width: 46px;
+      height: 46px;
+      min-height: 46px;
       padding: 0;
       border: 0;
-      border-radius: 10px;
+      border-radius: 12px;
       background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: none;
     }
+
+    .dice-choice-btn .pending-die {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+    }
+
+    .dice-choice-btn .pending-die .pip {
+      width: 6px;
+      height: 6px;
+    }
+
+    .dice-choice-btn .pending-die .pip.tl { top: 6px; left: 6px; }
+    .dice-choice-btn .pending-die .pip.tc { top: 6px; left: 50%; transform: translateX(-50%); }
+    .dice-choice-btn .pending-die .pip.tr { top: 6px; right: 6px; }
+    .dice-choice-btn .pending-die .pip.ml { top: 50%; left: 6px; transform: translateY(-50%); }
+    .dice-choice-btn .pending-die .pip.mc { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .dice-choice-btn .pending-die .pip.mr { top: 50%; right: 6px; transform: translateY(-50%); }
+    .dice-choice-btn .pending-die .pip.bl { bottom: 6px; left: 6px; }
+    .dice-choice-btn .pending-die .pip.bc { bottom: 6px; left: 50%; transform: translateX(-50%); }
+    .dice-choice-btn .pending-die .pip.br { bottom: 6px; right: 6px; }
 
     .dice-choice-btn:hover {
       background: rgba(15,23,42,0.06);
@@ -553,6 +576,15 @@
       .setup-grid { grid-template-columns: 1fr; }
       .player-setup-grid { grid-template-columns: 1fr; }
       .color-buttons { margin-bottom: 12px; }
+
+      .dice-entry-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dice-choice-grid {
+        grid-template-columns: repeat(6, 46px);
+        justify-content: start;
+      }
       .sum-footer { grid-template-columns: 1fr 1fr; }
       .pending-roll-box { grid-template-columns: repeat(3, 1fr); }
 
@@ -666,16 +698,6 @@
           <label class="mini-switch" title="Ocultar distribución de la suma"><input type="checkbox" data-section-switch="sumDistribution" onchange="setSectionVisibility('sumDistribution', this.checked)"><span class="switch-track"></span></label>
         </div>
         <div class="chart-box-lg"><canvas id="sumChart"></canvas></div>
-        <div class="sum-footer">
-          <div class="die-card yellow">
-            <div class="die-face yellow die-1" id="lastYellowDie"><span class="pip tl"></span><span class="pip tc"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mc"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip bc"></span><span class="pip br"></span></div>
-            <div class="die-card-info"><div class="preview-title">Último dado amarillo</div><div class="preview-value" id="lastYellowText">Sin registros</div></div>
-          </div>
-          <div class="die-card red">
-            <div class="die-face red die-1" id="lastRedDie"><span class="pip tl"></span><span class="pip tc"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mc"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip bc"></span><span class="pip br"></span></div>
-            <div class="die-card-info"><div class="preview-title">Último dado rojo</div><div class="preview-value" id="lastRedText">Sin registros</div></div>
-          </div>
-        </div>
       </div>
 
       <div class="right-stack app-visibility-section" data-visibility-section="diceFrequency">
@@ -1166,13 +1188,17 @@
     const last = filtered.length ? filtered[filtered.length - 1] : null;
     const globalLast = rolls.length ? rolls[rolls.length - 1] : null;
     if (last) {
-      document.getElementById('lastYellowText').innerText = `Valor ${last.yellow}`;
-      document.getElementById('lastRedText').innerText = `Valor ${last.red}`;
+      const lastYellowText = document.getElementById('lastYellowText');
+      const lastRedText = document.getElementById('lastRedText');
+      if (lastYellowText) lastYellowText.innerText = `Valor ${last.yellow}`;
+      if (lastRedText) lastRedText.innerText = `Valor ${last.red}`;
       setDieFace('lastYellowDie', last.yellow);
       setDieFace('lastRedDie', last.red);
     } else {
-      document.getElementById('lastYellowText').innerText = 'Sin registros';
-      document.getElementById('lastRedText').innerText = 'Sin registros';
+      const lastYellowText = document.getElementById('lastYellowText');
+      const lastRedText = document.getElementById('lastRedText');
+      if (lastYellowText) lastYellowText.innerText = 'Sin registros';
+      if (lastRedText) lastRedText.innerText = 'Sin registros';
       setDieFace('lastYellowDie', 1);
       setDieFace('lastRedDie', 1);
     }
