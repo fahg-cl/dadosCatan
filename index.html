@@ -629,10 +629,109 @@
       .preview-title { font-size: 10px; }
       .preview-value { font-size: 13px; }
     }
+
+    /* Pantalla inicial de carga */
+    .app-splash {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 50% 28%, rgba(255,255,255,0.22), transparent 28%),
+        linear-gradient(0deg, #9f1d1d 0%, #d9480f 48%, #f59e0b 100%);
+      transition: opacity 520ms ease, visibility 520ms ease;
+    }
+
+    .app-splash.splash-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .splash-content {
+      width: min(280px, 82vw);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      text-align: center;
+    }
+
+    .splash-icon {
+      width: 74px;
+      height: 74px;
+      border-radius: 24px;
+      object-fit: cover;
+      box-shadow:
+        0 14px 32px rgba(0,0,0,0.26),
+        inset 0 1px 0 rgba(255,255,255,0.30);
+      animation: splashIconGrow 5200ms ease-in-out forwards;
+    }
+
+    .splash-progress-area {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .splash-progress-track {
+      width: 100%;
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.28);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.18);
+    }
+
+    .splash-progress-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: #ffffff;
+      transition: width 120ms linear;
+    }
+
+    .splash-percent {
+      font-size: 15px;
+      line-height: 1;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.04em;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.22);
+    }
+
+    @keyframes splashIconGrow {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(2);
+      }
+    }
+
   </style>
 </head>
 
 <body>
+
+<div id="appSplash" class="app-splash" aria-label="Cargando aplicación">
+  <div class="splash-content">
+    <img class="splash-icon" src="Icon.png" alt="CATAN Dice" />
+    <div class="splash-progress-area">
+      <div class="splash-progress-track">
+        <div id="splashProgressFill" class="splash-progress-fill"></div>
+      </div>
+      <div id="splashPercent" class="splash-percent">0%</div>
+    </div>
+  </div>
+</div>
+
 
 <button class="menu-fab" type="button" onclick="toggleSideMenu(true)" aria-label="Abrir configuración">☰</button>
 <div id="sideMenuBackdrop" class="side-menu-backdrop" onclick="toggleSideMenu(false)"></div>
@@ -1265,7 +1364,39 @@
     sumChart.update();
   }
 
+
+  function startInitialSplash() {
+    const splash = document.getElementById('appSplash');
+    const fill = document.getElementById('splashProgressFill');
+    const percentText = document.getElementById('splashPercent');
+
+    if (!splash || !fill || !percentText) return;
+
+    const duration = 5200;
+    const startedAt = performance.now();
+
+    function animate(now) {
+      const elapsed = now - startedAt;
+      const progress = Math.min(100, Math.round((elapsed / duration) * 100));
+
+      fill.style.width = progress + '%';
+      percentText.innerText = progress + '%';
+
+      if (progress < 100) {
+        requestAnimationFrame(animate);
+      } else {
+        setTimeout(() => {
+          splash.classList.add('splash-hidden');
+          setTimeout(() => splash.remove(), 650);
+        }, 260);
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+
   initializeConfig();
+  startInitialSplash();
 </script>
 </body>
 </html>
