@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Scanner Dados" />
+  <meta name="theme-color" content="#9f1d1d" />
+  <title>Prototipo Scanner Dados CATAN</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.20), transparent 28%),
+        linear-gradient(135deg, #7f1d1d, #c2410c 52%, #f59e0b);
+      font-family: Arial, Helvetica, sans-serif;
+      color: #111827;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      padding:
+        calc(10px + env(safe-area-inset-top))
+        calc(10px + env(safe-area-inset-right))
+        calc(10px + env(safe-area-inset-bottom))
+        calc(10px + env(safe-area-inset-left));
+    }
+
+    .app {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: rgba(255,255,255,0.94);
+      border: 1px solid rgba(255,255,255,0.44);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.20);
+      backdrop-filter: blur(14px);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 6px 0;
+      font-size: 21px;
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.35;
+      color: #475569;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.94);
+      border: 1px solid rgba(255,255,255,0.44);
+      border-radius: 18px;
+      padding: 12px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.20);
+      backdrop-filter: blur(14px);
+    }
+
+    .camera-shell {
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      background: #111827;
+      min-height: 260px;
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    video {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #111827;
+    }
+
+    #overlayCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .camera-placeholder {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: rgba(255,255,255,0.80);
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    button, select, input {
+      width: 100%;
+      min-height: 44px;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
+      padding: 9px 10px;
+      font-size: 14px;
+    }
+
+    button {
+      border: none;
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+      background: #2563eb;
+    }
+
+    button:hover { filter: brightness(0.96); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .btn-green { background: #16a34a; }
+    .btn-red { background: #b91c1c; }
+    .btn-gray { background: #64748b; }
+
+    .status {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      font-size: 13px;
+      line-height: 1.35;
+      color: #334155;
+    }
+
+    .status strong { color: #111827; }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .result-card {
+      border-radius: 16px;
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      min-height: 95px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .result-card.yellow { background: #fffbeb; }
+    .result-card.red { background: #fef2f2; }
+
+    .result-label {
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .result-label.yellow { color: #92400e; }
+    .result-label.red { color: #991b1b; }
+
+    .result-value {
+      font-size: 46px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .sum-card {
+      margin-top: 8px;
+      border-radius: 16px;
+      padding: 12px;
+      background: linear-gradient(135deg, #581c87, #7c3aed);
+      color: #fff;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(88,28,135,0.30);
+    }
+
+    .sum-label {
+      font-size: 12px;
+      font-weight: 800;
+      opacity: 0.8;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .sum-value {
+      margin-top: 2px;
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .config-row {
+      margin-top: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: #475569;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .check-row input {
+      width: 20px;
+      height: 20px;
+      min-height: 20px;
+      flex: 0 0 auto;
+    }
+
+    .history {
+      margin-top: 10px;
+      max-height: 260px;
+      overflow-y: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 7px 8px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #f8fafc;
+    }
+
+    .note {
+      margin-top: 10px;
+      padding: 10px;
+      background: #fff7ed;
+      color: #7c2d12;
+      border: 1px solid #fed7aa;
+      border-radius: 14px;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .pill-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 5px 9px;
+      background: #eef2ff;
+      color: #3730a3;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 820px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 6px;
+      }
+
+      .header,
+      .card {
+        border-radius: 14px;
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 18px;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .camera-shell {
+        min-height: 220px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <div class="header">
+      <h1>Prototipo Scanner de Dados CATAN</h1>
+      <p class="subtitle">
+        Página independiente para probar cámara, detección de dados amarillo/rojo, estabilidad y lectura de puntos. No está conectada con la app principal.
+      </p>
+      <div class="pill-row">
+        <span class="pill">Cámara</span>
+        <span class="pill">Color tracking</span>
+        <span class="pill">Detección quieto</span>
+        <span class="pill">Lectura de puntos</span>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="camera-shell">
+          <video id="cameraVideo" playsinline muted autoplay></video>
+          <canvas id="overlayCanvas"></canvas>
+          <div id="cameraPlaceholder" class="camera-placeholder">
+            Presiona “Activar cámara”. En iPhone debe abrirse desde HTTPS o localhost para permitir acceso a la cámara.
+          </div>
+        </div>
+
+        <div class="controls">
+          <button id="startBtn" class="btn-green" onclick="startCamera()">Activar cámara</button>
+          <button id="stopBtn" class="btn-red" onclick="stopCamera()" disabled>Detener cámara</button>
+          <button class="btn-gray" onclick="clearHistory()">Limpiar historial</button>
+          <button onclick="captureCurrentResult()">Registrar lectura actual</button>
+        </div>
+
+        <div id="statusBox" class="status">
+          <strong>Estado:</strong> cámara detenida.
+        </div>
+
+        <div class="note">
+          Para esta primera prueba usa buena iluminación, una superficie sin colores rojos/amarillos intensos, y deja los dados separados entre sí. El reconocimiento es experimental y puede requerir ajustar el modo de puntos.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="result-grid">
+          <div class="result-card yellow">
+            <div class="result-label yellow">Dado amarillo</div>
+            <div id="yellowResult" class="result-value">-</div>
+          </div>
+
+          <div class="result-card red">
+            <div class="result-label red">Dado rojo</div>
+            <div id="redResult" class="result-value">-</div>
+          </div>
+        </div>
+
+        <div class="sum-card">
+          <div class="sum-label">Suma detectada</div>
+          <div id="sumResult" class="sum-value">-</div>
+        </div>
+
+        <div class="config-row">
+          <div>
+            <label for="pipMode">Modo de lectura de puntos</label>
+            <select id="pipMode">
+              <option value="auto" selected>Automático</option>
+              <option value="dark">Puntos oscuros</option>
+              <option value="light">Puntos claros</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="sensitivity">Sensibilidad de detección</label>
+            <select id="sensitivity">
+              <option value="low">Baja</option>
+              <option value="normal" selected>Normal</option>
+              <option value="high">Alta</option>
+            </select>
+          </div>
+
+          <div class="check-row">
+            <span>Registrar automáticamente cuando los dados estén quietos</span>
+            <input id="autoRegister" type="checkbox" checked />
+          </div>
+        </div>
+
+        <div class="history">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Amarillo</th>
+                <th>Rojo</th>
+                <th>Suma</th>
+                <th>Hora</th>
+              </tr>
+            </thead>
+            <tbody id="historyTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="processCanvas" style="display:none;"></canvas>
+
+  <script>
+    const video = document.getElementById('cameraVideo');
+    const overlayCanvas = document.getElementById('overlayCanvas');
+    const overlayCtx = overlayCanvas.getContext('2d');
+    const processCanvas = document.getElementById('processCanvas');
+    const processCtx = processCanvas.getContext('2d', { willReadFrequently: true });
+
+    let stream = null;
+    let processingTimer = null;
+    let lastDetection = null;
+    let stableFrames = 0;
+    let armedForAutoCapture = true;
+    let lastAutoSignature = '';
+    let history = [];
+    let currentReading = {
+      yellow: null,
+      red: null,
+      sum: null,
+      stable: false,
+      motion: null
+    };
+
+    async function startCamera() {
+      try {
+        setStatus('Solicitando acceso a la cámara...', false);
+
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: 'environment' },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          },
+          audio: false
+        });
+
+        video.srcObject = stream;
+
+        await new Promise(resolve => {
+          video.onloadedmetadata = () => resolve();
+        });
+
+        document.getElementById('cameraPlaceholder').style.display = 'none';
+        document.getElementById('startBtn').disabled = true;
+        document.getElementById('stopBtn').disabled = false;
+
+        syncOverlayCanvas();
+        window.addEventListener('resize', syncOverlayCanvas);
+
+        processingTimer = setInterval(processFrame, 120);
+        setStatus('Cámara activa. Buscando dado amarillo y dado rojo...', false);
+
+      } catch (error) {
+        setStatus('No se pudo activar la cámara: ' + error.message, true);
+      }
+    }
+
+    function stopCamera() {
+      if (processingTimer) {
+        clearInterval(processingTimer);
+        processingTimer = null;
+      }
+
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+
+      video.srcObject = null;
+      overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+      document.getElementById('cameraPlaceholder').style.display = 'grid';
+      document.getElementById('startBtn').disabled = false;
+      document.getElementById('stopBtn').disabled = true;
+      resetReading();
+      setStatus('Cámara detenida.', false);
+    }
+
+    function syncOverlayCanvas() {
+      const vw = video.videoWidth || 640;
+      const vh = video.videoHeight || 360;
+      overlayCanvas.width = vw;
+      overlayCanvas.height = vh;
+    }
+
+    function processFrame() {
+      if (!video.videoWidth || !video.videoHeight) return;
+
+      const targetW = 420;
+      const ratio = video.videoHeight / video.videoWidth;
+      const targetH = Math.round(targetW * ratio);
+
+      processCanvas.width = targetW;
+      processCanvas.height = targetH;
+      processCtx.drawImage(video, 0, 0, targetW, targetH);
+
+      const frame = processCtx.getImageData(0, 0, targetW, targetH);
+      const sensitivity = document.getElementById('sensitivity').value;
+
+      const yellowMask = buildColorMask(frame.data, targetW, targetH, 'yellow', sensitivity);
+      const redMask = buildColorMask(frame.data, targetW, targetH, 'red', sensitivity);
+
+      const yellowBlob = findBestBlob(yellowMask, targetW, targetH, sensitivity);
+      const redBlob = findBestBlob(redMask, targetW, targetH, sensitivity);
+
+      const yellowDie = yellowBlob ? analyzeDie(frame, targetW, targetH, yellowBlob, 'yellow') : null;
+      const redDie = redBlob ? analyzeDie(frame, targetW, targetH, redBlob, 'red') : null;
+
+      const detection = {
+        yellow: yellowDie,
+        red: redDie
+      };
+
+      const motion = calculateMotion(detection, lastDetection);
+      lastDetection = detection;
+
+      const bothFound = !!yellowDie && !!redDie;
+      const valuesOk = bothFound && isValidValue(yellowDie.value) && isValidValue(redDie.value);
+
+      if (bothFound && motion !== null && motion < 4.5) {
+        stableFrames++;
+      } else {
+        stableFrames = 0;
+      }
+
+      const stable = valuesOk && stableFrames >= 8;
+
+      if (!bothFound || (motion !== null && motion > 12)) {
+        armedForAutoCapture = true;
+      }
+
+      currentReading = {
+        yellow: yellowDie?.value ?? null,
+        red: redDie?.value ?? null,
+        sum: valuesOk ? yellowDie.value + redDie.value : null,
+        stable,
+        motion
+      };
+
+      updateResultUI();
+      drawOverlay(detection, targetW, targetH, stable);
+
+      if (stable && document.getElementById('autoRegister').checked && armedForAutoCapture) {
+        const signature = `${yellowDie.value}-${redDie.value}`;
+        if (signature !== lastAutoSignature || armedForAutoCapture) {
+          addHistory(yellowDie.value, redDie.value);
+          lastAutoSignature = signature;
+          armedForAutoCapture = false;
+        }
+      }
+
+      const status = buildStatusText(bothFound, valuesOk, stable, motion, yellowDie, redDie);
+      setStatus(status, false);
+    }
+
+    function buildColorMask(data, w, h, color, sensitivity) {
+      const mask = new Uint8Array(w * h);
+      const satMin = sensitivity === 'high' ? 0.22 : sensitivity === 'low' ? 0.38 : 0.30;
+      const valMin = sensitivity === 'high' ? 0.22 : sensitivity === 'low' ? 0.36 : 0.28;
+
+      for (let i = 0, p = 0; i < data.length; i += 4, p++) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        const hsv = rgbToHsv(r, g, b);
+
+        let match = false;
+
+        if (color === 'yellow') {
+          match =
+            hsv.h >= 30 && hsv.h <= 72 &&
+            hsv.s >= satMin &&
+            hsv.v >= valMin &&
+            r > 100 &&
+            g > 75 &&
+            b < 160;
+        } else {
+          match =
+            ((hsv.h <= 16 || hsv.h >= 344) && hsv.s >= satMin && hsv.v >= valMin && r > 80) ||
+            (r > 110 && g < 115 && b < 115 && r > g * 1.20 && r > b * 1.20);
+        }
+
+        mask[p] = match ? 1 : 0;
+      }
+
+      return mask;
+    }
+
+    function findBestBlob(mask, w, h, sensitivity) {
+      const visited = new Uint8Array(mask.length);
+      const minArea = sensitivity === 'high' ? 45 : sensitivity === 'low' ? 130 : 80;
+      const components = [];
+      const stack = [];
+
+      for (let y = 1; y < h - 1; y++) {
+        for (let x = 1; x < w - 1; x++) {
+          const idx = y * w + x;
+          if (!mask[idx] || visited[idx]) continue;
+
+          let area = 0;
+          let minX = x, maxX = x, minY = y, maxY = y;
+          let sumX = 0, sumY = 0;
+
+          visited[idx] = 1;
+          stack.length = 0;
+          stack.push(idx);
+
+          while (stack.length) {
+            const cur = stack.pop();
+            const cy = Math.floor(cur / w);
+            const cx = cur - cy * w;
+
+            area++;
+            sumX += cx;
+            sumY += cy;
+
+            if (cx < minX) minX = cx;
+            if (cx > maxX) maxX = cx;
+            if (cy < minY) minY = cy;
+            if (cy > maxY) maxY = cy;
+
+            const neighbors = [cur - 1, cur + 1, cur - w, cur + w];
+
+            for (const n of neighbors) {
+              if (n < 0 || n >= mask.length || visited[n] || !mask[n]) continue;
+              visited[n] = 1;
+              stack.push(n);
+            }
+          }
+
+          if (area >= minArea) {
+            const bw = maxX - minX + 1;
+            const bh = maxY - minY + 1;
+            const aspect = bw / Math.max(1, bh);
+            const fill = area / Math.max(1, bw * bh);
+
+            if (
+              bw >= 14 &&
+              bh >= 14 &&
+              aspect > 0.45 &&
+              aspect < 2.20 &&
+              fill > 0.18
+            ) {
+              components.push({
+                x: minX,
+                y: minY,
+                w: bw,
+                h: bh,
+                area,
+                cx: sumX / area,
+                cy: sumY / area
+              });
+            }
+          }
+        }
+      }
+
+      components.sort((a, b) => b.area - a.area);
+      return components[0] || null;
+    }
+
+    function analyzeDie(frame, w, h, blob, color) {
+      const pad = Math.round(Math.max(blob.w, blob.h) * 0.14);
+      const box = {
+        x: clamp(blob.x - pad, 0, w - 1),
+        y: clamp(blob.y - pad, 0, h - 1),
+        w: clamp(blob.w + pad * 2, 1, w - blob.x),
+        h: clamp(blob.h + pad * 2, 1, h - blob.y),
+        cx: blob.cx,
+        cy: blob.cy
+      };
+
+      const pipMode = document.getElementById('pipMode').value;
+      const value = countPips(frame, w, h, box, pipMode);
+
+      return {
+        color,
+        box,
+        value
+      };
+    }
+
+    function countPips(frame, w, h, box, mode) {
+      const x0 = Math.max(0, Math.round(box.x));
+      const y0 = Math.max(0, Math.round(box.y));
+      const x1 = Math.min(w, Math.round(box.x + box.w));
+      const y1 = Math.min(h, Math.round(box.y + box.h));
+
+      const roiW = x1 - x0;
+      const roiH = y1 - y0;
+      if (roiW < 12 || roiH < 12) return null;
+
+      const marginX = Math.round(roiW * 0.10);
+      const marginY = Math.round(roiH * 0.10);
+
+      let lumSum = 0;
+      let satSum = 0;
+      let n = 0;
+
+      for (let y = y0 + marginY; y < y1 - marginY; y++) {
+        for (let x = x0 + marginX; x < x1 - marginX; x++) {
+          const idx = (y * w + x) * 4;
+          const r = frame.data[idx];
+          const g = frame.data[idx + 1];
+          const b = frame.data[idx + 2];
+          lumSum += luminance(r, g, b);
+          satSum += rgbToHsv(r, g, b).s;
+          n++;
+        }
+      }
+
+      if (!n) return null;
+
+      const avgLum = lumSum / n;
+      const avgSat = satSum / n;
+
+      const darkMask = new Uint8Array(roiW * roiH);
+      const lightMask = new Uint8Array(roiW * roiH);
+
+      for (let yy = 0; yy < roiH; yy++) {
+        for (let xx = 0; xx < roiW; xx++) {
+          if (xx < marginX || xx > roiW - marginX || yy < marginY || yy > roiH - marginY) continue;
+
+          const srcX = x0 + xx;
+          const srcY = y0 + yy;
+          const idx = (srcY * w + srcX) * 4;
+          const r = frame.data[idx];
+          const g = frame.data[idx + 1];
+          const b = frame.data[idx + 2];
+          const lum = luminance(r, g, b);
+          const hsv = rgbToHsv(r, g, b);
+
+          const dark = lum < Math.max(48, avgLum - 52) && hsv.v < 0.60;
+          const light = lum > Math.min(238, avgLum + 52) && hsv.s < Math.max(0.45, avgSat * 0.75);
+
+          const p = yy * roiW + xx;
+          darkMask[p] = dark ? 1 : 0;
+          lightMask[p] = light ? 1 : 0;
+        }
+      }
+
+      const darkCount = countRoundComponents(darkMask, roiW, roiH);
+      const lightCount = countRoundComponents(lightMask, roiW, roiH);
+
+      if (mode === 'dark') return normalizePipCount(darkCount);
+      if (mode === 'light') return normalizePipCount(lightCount);
+
+      const darkValid = darkCount >= 1 && darkCount <= 6;
+      const lightValid = lightCount >= 1 && lightCount <= 6;
+
+      if (darkValid && !lightValid) return darkCount;
+      if (lightValid && !darkValid) return lightCount;
+      if (darkValid && lightValid) {
+        return darkCount >= lightCount ? darkCount : lightCount;
+      }
+
+      return null;
+    }
+
+    function countRoundComponents(mask, w, h) {
+      const visited = new Uint8Array(mask.length);
+      const stack = [];
+      const comps = [];
+      const roiArea = w * h;
+      const minArea = Math.max(4, Math.round(roiArea * 0.0028));
+      const maxArea = Math.max(18, Math.round(roiArea * 0.080));
+
+      for (let y = 1; y < h - 1; y++) {
+        for (let x = 1; x < w - 1; x++) {
+          const idx = y * w + x;
+          if (!mask[idx] || visited[idx]) continue;
+
+          let area = 0;
+          let minX = x, maxX = x, minY = y, maxY = y;
+          let sumX = 0, sumY = 0;
+
+          visited[idx] = 1;
+          stack.length = 0;
+          stack.push(idx);
+
+          while (stack.length) {
+            const cur = stack.pop();
+            const cy = Math.floor(cur / w);
+            const cx = cur - cy * w;
+
+            area++;
+            sumX += cx;
+            sumY += cy;
+            if (cx < minX) minX = cx;
+            if (cx > maxX) maxX = cx;
+            if (cy < minY) minY = cy;
+            if (cy > maxY) maxY = cy;
+
+            const neighbors = [cur - 1, cur + 1, cur - w, cur + w];
+
+            for (const n of neighbors) {
+              if (n < 0 || n >= mask.length || visited[n] || !mask[n]) continue;
+              visited[n] = 1;
+              stack.push(n);
+            }
+          }
+
+          const bw = maxX - minX + 1;
+          const bh = maxY - minY + 1;
+          const aspect = bw / Math.max(1, bh);
+          const cx = sumX / area;
+          const cy = sumY / area;
+          const centerOk = cx > w * 0.12 && cx < w * 0.88 && cy > h * 0.12 && cy < h * 0.88;
+
+          if (
+            area >= minArea &&
+            area <= maxArea &&
+            bw >= 2 &&
+            bh >= 2 &&
+            aspect > 0.42 &&
+            aspect < 2.35 &&
+            centerOk
+          ) {
+            comps.push({ area, x: minX, y: minY, w: bw, h: bh, cx, cy });
+          }
+        }
+      }
+
+      comps.sort((a, b) => b.area - a.area);
+
+      const filtered = [];
+      for (const c of comps) {
+        const tooClose = filtered.some(f => distance(c.cx, c.cy, f.cx, f.cy) < Math.min(w, h) * 0.10);
+        if (!tooClose) filtered.push(c);
+        if (filtered.length >= 6) break;
+      }
+
+      return filtered.length;
+    }
+
+    function normalizePipCount(count) {
+      if (count >= 1 && count <= 6) return count;
+      return null;
+    }
+
+    function calculateMotion(current, previous) {
+      if (!current || !previous || !current.yellow || !current.red || !previous.yellow || !previous.red) {
+        return null;
+      }
+
+      const yMove = distance(current.yellow.box.cx, current.yellow.box.cy, previous.yellow.box.cx, previous.yellow.box.cy);
+      const rMove = distance(current.red.box.cx, current.red.box.cy, previous.red.box.cx, previous.red.box.cy);
+
+      return (yMove + rMove) / 2;
+    }
+
+    function drawOverlay(detection, frameW, frameH, stable) {
+      if (!video.videoWidth || !video.videoHeight) return;
+
+      syncOverlayCanvas();
+
+      const scaleX = overlayCanvas.width / frameW;
+      const scaleY = overlayCanvas.height / frameH;
+
+      overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+
+      drawDieBox(detection.yellow, scaleX, scaleY, '#facc15', stable);
+      drawDieBox(detection.red, scaleX, scaleY, '#ef4444', stable);
+    }
+
+    function drawDieBox(die, scaleX, scaleY, color, stable) {
+      if (!die) return;
+
+      const b = die.box;
+      const x = b.x * scaleX;
+      const y = b.y * scaleY;
+      const w = b.w * scaleX;
+      const h = b.h * scaleY;
+
+      overlayCtx.lineWidth = stable ? 5 : 3;
+      overlayCtx.strokeStyle = color;
+      overlayCtx.strokeRect(x, y, w, h);
+
+      overlayCtx.fillStyle = stable ? 'rgba(22,163,74,0.92)' : 'rgba(17,24,39,0.86)';
+      overlayCtx.fillRect(x, Math.max(0, y - 28), 92, 24);
+
+      overlayCtx.fillStyle = '#ffffff';
+      overlayCtx.font = 'bold 15px Arial';
+      overlayCtx.fillText(`${die.color === 'yellow' ? 'Amarillo' : 'Rojo'}: ${die.value ?? '?'}`, x + 7, Math.max(17, y - 10));
+    }
+
+    function updateResultUI() {
+      document.getElementById('yellowResult').innerText = currentReading.yellow ?? '-';
+      document.getElementById('redResult').innerText = currentReading.red ?? '-';
+      document.getElementById('sumResult').innerText = currentReading.sum ?? '-';
+    }
+
+    function buildStatusText(bothFound, valuesOk, stable, motion, yellowDie, redDie) {
+      if (!bothFound) {
+        return '<strong>Estado:</strong> buscando ambos dados. Detectado: ' +
+          `${yellowDie ? 'amarillo ' : ''}${redDie ? 'rojo' : ''}`.trim() || '<strong>Estado:</strong> buscando ambos dados.';
+      }
+
+      if (!valuesOk) {
+        return '<strong>Estado:</strong> dados detectados, pero aún no se reconoce con seguridad el valor de los puntos.';
+      }
+
+      if (stable) {
+        return `<strong>Estado:</strong> dados quietos. Lectura lista: amarillo ${yellowDie.value}, rojo ${redDie.value}, suma ${yellowDie.value + redDie.value}.`;
+      }
+
+      const movement = motion === null ? '-' : motion.toFixed(1);
+      return `<strong>Estado:</strong> dados detectados, esperando que queden quietos. Movimiento: ${movement}.`;
+    }
+
+    function captureCurrentResult() {
+      if (!isValidValue(currentReading.yellow) || !isValidValue(currentReading.red)) {
+        setStatus('No hay una lectura válida para registrar.', true);
+        return;
+      }
+
+      addHistory(currentReading.yellow, currentReading.red);
+    }
+
+    function addHistory(yellow, red) {
+      const row = {
+        yellow,
+        red,
+        sum: yellow + red,
+        time: new Date().toLocaleTimeString('es-CL')
+      };
+
+      history.push(row);
+      renderHistory();
+
+      setStatus(`<strong>Registrado:</strong> amarillo ${yellow}, rojo ${red}, suma ${yellow + red}.`, false);
+    }
+
+    function renderHistory() {
+      const tbody = document.getElementById('historyTable');
+      tbody.innerHTML = '';
+
+      history.forEach((item, index) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${item.yellow}</td>
+            <td>${item.red}</td>
+            <td>${item.sum}</td>
+            <td>${item.time}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function clearHistory() {
+      history = [];
+      renderHistory();
+      armedForAutoCapture = true;
+      lastAutoSignature = '';
+      setStatus('Historial del prototipo limpiado.', false);
+    }
+
+    function resetReading() {
+      currentReading = {
+        yellow: null,
+        red: null,
+        sum: null,
+        stable: false,
+        motion: null
+      };
+
+      stableFrames = 0;
+      lastDetection = null;
+      updateResultUI();
+    }
+
+    function setStatus(message, isError) {
+      const box = document.getElementById('statusBox');
+      box.innerHTML = message;
+      box.style.background = isError ? '#fef2f2' : '#f8fafc';
+      box.style.borderColor = isError ? '#fecaca' : '#e2e8f0';
+      box.style.color = isError ? '#7f1d1d' : '#334155';
+    }
+
+    function rgbToHsv(r, g, b) {
+      r /= 255;
+      g /= 255;
+      b /= 255;
+
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
+      const d = max - min;
+
+      let h = 0;
+      const s = max === 0 ? 0 : d / max;
+      const v = max;
+
+      if (d !== 0) {
+        switch (max) {
+          case r:
+            h = 60 * (((g - b) / d) % 6);
+            break;
+          case g:
+            h = 60 * ((b - r) / d + 2);
+            break;
+          case b:
+            h = 60 * ((r - g) / d + 4);
+            break;
+        }
+      }
+
+      if (h < 0) h += 360;
+
+      return { h, s, v };
+    }
+
+    function luminance(r, g, b) {
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    }
+
+    function distance(x1, y1, x2, y2) {
+      return Math.hypot(x1 - x2, y1 - y2);
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function isValidValue(value) {
+      return Number.isInteger(value) && value >= 1 && value <= 6;
+    }
+  </script>
+</body>
+</html>
